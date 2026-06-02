@@ -1880,6 +1880,365 @@
     line-height: 1.6;
   }
 
+  /* ===== CENTRAL DE INVESTIGAÇÃO ===== */
+  .central-dashboard {
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    gap: 24px;
+    align-items: start;
+  }
+
+  /* Painel lateral de controle */
+  .central-sidebar {
+    background: var(--navy-light);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    overflow: hidden;
+    position: sticky;
+    top: 76px;
+  }
+
+  .central-sidebar-header {
+    background: linear-gradient(135deg, rgba(201,162,39,0.12), rgba(201,162,39,0.04));
+    border-bottom: 1px solid var(--border);
+    padding: 20px;
+  }
+
+  .central-sidebar-title {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 4px;
+  }
+
+  .central-sidebar-sub {
+    font-size: 12px;
+    color: var(--text-muted);
+  }
+
+  .central-mode-btn {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    width: 100%;
+    background: none;
+    border: none;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    padding: 16px 20px;
+    cursor: pointer;
+    text-align: left;
+    transition: all 0.2s;
+    font-family: 'DM Sans', sans-serif;
+  }
+
+  .central-mode-btn:last-child { border-bottom: none; }
+  .central-mode-btn:hover { background: rgba(255,255,255,0.04); }
+
+  .central-mode-btn.active {
+    background: rgba(201,162,39,0.08);
+    border-left: 3px solid var(--gold);
+    padding-left: 17px;
+  }
+
+  .central-mode-icon {
+    width: 38px; height: 38px;
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+    flex-shrink: 0;
+    transition: background 0.2s;
+  }
+
+  .icon-verificador { background: rgba(201,162,39,0.15); }
+  .icon-datajud     { background: rgba(74,222,128,0.12); }
+  .icon-busca       { background: rgba(96,165,250,0.12); }
+  .icon-quiz        { background: rgba(248,113,113,0.12); }
+
+  .central-mode-btn.active .icon-verificador { background: rgba(201,162,39,0.25); }
+  .central-mode-btn.active .icon-datajud     { background: rgba(74,222,128,0.22); }
+  .central-mode-btn.active .icon-busca       { background: rgba(96,165,250,0.22); }
+  .central-mode-btn.active .icon-quiz        { background: rgba(248,113,113,0.22); }
+
+  .central-mode-info { flex: 1; }
+
+  .central-mode-name {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--white);
+    margin-bottom: 2px;
+  }
+
+  .central-mode-desc {
+    font-size: 11px;
+    color: var(--text-muted);
+    line-height: 1.4;
+  }
+
+  .central-mode-btn.active .central-mode-name { color: var(--gold-light); }
+
+  /* Status bar no sidebar */
+  .central-status {
+    padding: 14px 20px;
+    border-top: 1px solid var(--border);
+    background: rgba(0,0,0,0.15);
+  }
+
+  .central-status-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-bottom: 4px;
+  }
+
+  .central-status-row:last-child { margin-bottom: 0; }
+
+  .status-dot {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .status-dot.online  { background: #4ADE80; animation: pulse 2s infinite; }
+  .status-dot.offline { background: #F87171; }
+  .status-dot.warn    { background: var(--gold); }
+
+  /* Painel principal */
+  .central-main {
+    background: var(--navy-light);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    overflow: hidden;
+    min-height: 600px;
+  }
+
+  .central-panel {
+    display: none;
+    padding: 32px;
+    animation: fadeIn 0.25s ease;
+  }
+
+  .central-panel.active { display: block; }
+
+  .central-panel-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: 24px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .central-panel-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--white);
+    margin-bottom: 4px;
+  }
+
+  .central-panel-desc {
+    font-size: 13px;
+    color: var(--text-muted);
+    max-width: 500px;
+    line-height: 1.5;
+  }
+
+  .central-badge {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 5px 12px;
+    border-radius: 100px;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  .badge-ia     { background: rgba(201,162,39,0.15); color: var(--gold-light); border: 1px solid var(--border); }
+  .badge-real   { background: rgba(74,222,128,0.12); color: #4ADE80; border: 1px solid rgba(74,222,128,0.3); }
+  .badge-busca  { background: rgba(96,165,250,0.12); color: #93C5FD; border: 1px solid rgba(96,165,250,0.3); }
+  .badge-quiz   { background: rgba(248,113,113,0.12); color: #F87171; border: 1px solid rgba(248,113,113,0.3); }
+
+  /* Input grande de processo */
+  .central-process-input {
+    width: 100%;
+    background: rgba(0,0,0,0.25);
+    border: 1.5px solid var(--border);
+    border-radius: 14px;
+    padding: 16px 20px;
+    color: var(--white);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 16px;
+    letter-spacing: 0.5px;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    margin-bottom: 14px;
+  }
+
+  .central-process-input:focus {
+    border-color: var(--gold);
+    box-shadow: 0 0 0 3px rgba(201,162,39,0.1);
+  }
+
+  .central-process-input::placeholder { color: var(--text-muted); }
+
+  /* Textarea de análise */
+  .central-textarea {
+    width: 100%;
+    min-height: 220px;
+    background: rgba(0,0,0,0.25);
+    border: 1.5px solid var(--border);
+    border-radius: 14px;
+    padding: 16px 20px;
+    color: var(--white);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    line-height: 1.7;
+    resize: vertical;
+    outline: none;
+    transition: border-color 0.2s;
+    margin-bottom: 14px;
+  }
+
+  .central-textarea:focus { border-color: var(--gold); }
+  .central-textarea::placeholder { color: var(--text-muted); }
+
+  /* Botão primário */
+  .central-btn-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--gold);
+    border: none;
+    border-radius: 12px;
+    padding: 13px 28px;
+    color: var(--navy);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .central-btn-primary:hover { background: var(--gold-light); transform: translateY(-1px); }
+  .central-btn-primary:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+  /* Botão secundário */
+  .central-btn-sec {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: transparent;
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 12px;
+    padding: 13px 20px;
+    color: var(--text-muted);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .central-btn-sec:hover { border-color: var(--border); color: var(--white); }
+
+  /* Resultados do DataJud dentro da Central */
+  .central-result-area {
+    margin-top: 20px;
+    border-top: 1px solid var(--border);
+    padding-top: 20px;
+  }
+
+  /* Diagnóstico (análise heurística) */
+  .central-diag-wrap {
+    margin-top: 20px;
+  }
+
+  /* Tribunal detectado badge */
+  .central-trib-badge {
+    display: none;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 16px;
+    background: rgba(74,222,128,0.08);
+    border: 1px solid rgba(74,222,128,0.25);
+    border-radius: 10px;
+    margin-bottom: 14px;
+    font-size: 13px;
+    color: #86EFAC;
+  }
+
+  .central-trib-badge.show { display: flex; }
+  .central-trib-badge.fora { background: rgba(248,113,113,0.08); border-color: rgba(248,113,113,0.3); color: #FCA5A5; }
+
+  /* Loading spinner central */
+  .central-loading {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 48px 0;
+    gap: 16px;
+  }
+
+  .central-loading.show { display: flex; }
+
+  .central-spinner {
+    width: 40px; height: 40px;
+    border: 3px solid rgba(201,162,39,0.2);
+    border-top-color: var(--gold);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+  }
+
+  .central-loading-text {
+    font-size: 13px;
+    color: var(--text-muted);
+    text-align: center;
+    line-height: 1.6;
+  }
+
+  /* Sugestões rápidas */
+  .central-suggestions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 16px;
+  }
+
+  .central-sug-chip {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 8px;
+    padding: 6px 12px;
+    font-size: 11px;
+    color: #9AAFC8;
+    cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+    transition: all 0.2s;
+  }
+
+  .central-sug-chip:hover { background: rgba(201,162,39,0.1); border-color: var(--border); color: var(--gold-light); }
+
+  /* Admin panel */
+  .central-admin-gate {
+    background: rgba(0,0,0,0.2);
+    border: 1px dashed rgba(201,162,39,0.3);
+    border-radius: 14px;
+    padding: 28px;
+    text-align: center;
+  }
+
+  @media (max-width: 768px) {
+    .central-dashboard { grid-template-columns: 1fr; }
+    .central-sidebar { position: static; }
+    .central-panel { padding: 20px; }
+  }
+
   /* SCROLLBAR */
   ::-webkit-scrollbar { width: 6px; }
   ::-webkit-scrollbar-track { background: var(--navy); }
@@ -2649,11 +3008,8 @@
       <button class="hero-nav-link" onclick="scrollToNav(); showSectionByName('apresentacao')">APRESENTAÇÃO</button>
       <button class="hero-nav-link" onclick="scrollToNav(); showSectionByName('chat')">CHAT IA</button>
       <button class="hero-nav-link" onclick="scrollToNav(); showSectionByName('quiz')">QUIZ</button>
-      <button class="hero-nav-link" onclick="scrollToNav(); showSectionByName('detector')">DETECTOR</button>
       <button class="hero-nav-link" onclick="scrollToNav(); showSectionByName('futuro')">FUTURO</button>
-      <button class="hero-nav-link" onclick="scrollToNav(); showSectionByName('ferramentas')">FERRAMENTAS</button>
-      <button class="hero-nav-link" onclick="scrollToNav(); showSectionByName('analise')">ANÁLISE</button>
-      <button class="hero-nav-link" onclick="scrollToNav(); showSectionByName('pesquisa')">🤖 PESQUISA IA</button>
+      <button class="hero-nav-link" onclick="scrollToNav(); showSectionByName('central')">🔎 CENTRAL DE INVESTIGAÇÃO</button>
     </div>
   </div>
 
@@ -2710,11 +3066,8 @@
   <button class="nav-drawer-btn" onclick="navGo('apresentacao')">📋 Apresentação</button>
   <button class="nav-drawer-btn" onclick="navGo('chat')">💬 Chat IA Jurídica</button>
   <button class="nav-drawer-btn" onclick="navGo('quiz')">🎯 Quiz</button>
-  <button class="nav-drawer-btn" onclick="navGo('detector')">🔍 Detector de Fake</button>
   <button class="nav-drawer-btn" onclick="navGo('futuro')">🚀 Futuro da Advocacia</button>
-  <button class="nav-drawer-btn" onclick="navGo('ferramentas')">🛠️ Ferramentas</button>
-  <button class="nav-drawer-btn" onclick="navGo('analise')">🔬 Pesquisa &amp; Análise IA</button>
-  <button class="nav-drawer-btn" onclick="navGo('pesquisa')">🤖 Pesquisa IA</button>
+  <button class="nav-drawer-btn" onclick="navGo('central')">🔎 Central de Investigação</button>
 </div>
 
 <!-- STICKY NAV -->
@@ -2727,11 +3080,11 @@
       <button class="nav-btn" onclick="showSection('apresentacao', this)">📋 Apresentação</button>
       <button class="nav-btn" onclick="showSection('chat', this)">💬 Chat IA</button>
       <button class="nav-btn" onclick="showSection('quiz', this)">🎯 Quiz</button>
-      <button class="nav-btn" onclick="showSection('detector', this)">🔍 Detector</button>
       <button class="nav-btn" onclick="showSection('futuro', this)">🚀 Futuro</button>
-      <button class="nav-btn" onclick="showSection('ferramentas', this)">🛠️ Ferramentas</button>
-      <button class="nav-btn" onclick="showSection('analise', this)">🔬 Pesquisa &amp; Análise</button>
-      <button class="nav-btn" onclick="showSection('pesquisa', this)">🤖 Pesquisa IA</button>
+      <button class="nav-btn" onclick="showSection('central', this)">🔎 Central de Investigação</button>
+      <div id="adminNavBtn" style="display:none;">
+        <button class="nav-btn" onclick="showSection('ferramentas', this)" style="color:var(--gold);">⚙ Admin</button>
+      </div>
     </div>
 
     <!-- Mobile: botão hambúrguer (☰) -->
@@ -3584,6 +3937,241 @@ Exemplo:
         🔍 Ir para Busca com IA →
       </button>
     </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════════════
+       CENTRAL DE INVESTIGAÇÃO — Dashboard unificado
+       Reúne: Verificador de Texto, Consulta DataJud, Busca IA, Quiz Fake
+       ══════════════════════════════════════════════════════════ -->
+  <section id="central" class="section">
+
+    <div class="section-header">
+      <div class="section-tag">Central</div>
+      <h2 class="section-title">Central de Investigação</h2>
+      <p class="section-desc">Seu dashboard jurídico completo — detecte alucinações, consulte processos reais e pesquise jurisprudências em um único lugar.</p>
+      <div class="gold-line"></div>
+    </div>
+
+    <div class="central-dashboard">
+
+      <!-- ══ SIDEBAR ══ -->
+      <div class="central-sidebar">
+        <div class="central-sidebar-header">
+          <div class="central-sidebar-title">Modo de operação</div>
+          <div class="central-sidebar-sub">Selecione a ferramenta</div>
+        </div>
+
+        <button class="central-mode-btn active" id="cBtn1" onclick="centralMode(1)">
+          <div class="central-mode-icon icon-verificador">🔬</div>
+          <div class="central-mode-info">
+            <div class="central-mode-name">Verificador de Texto</div>
+            <div class="central-mode-desc">Detectar alucinações em ementas</div>
+          </div>
+        </button>
+
+        <button class="central-mode-btn" id="cBtn2" onclick="centralMode(2)">
+          <div class="central-mode-icon icon-datajud">⚡</div>
+          <div class="central-mode-info">
+            <div class="central-mode-name">Consulta DataJud</div>
+            <div class="central-mode-desc">Dados reais via CNJ em tempo real</div>
+          </div>
+        </button>
+
+        <button class="central-mode-btn" id="cBtn3" onclick="centralMode(3)">
+          <div class="central-mode-icon icon-busca">🔍</div>
+          <div class="central-mode-info">
+            <div class="central-mode-name">Busca por Tema</div>
+            <div class="central-mode-desc">Jurisprudências por assunto</div>
+          </div>
+        </button>
+
+        <button class="central-mode-btn" id="cBtn4" onclick="centralMode(4)">
+          <div class="central-mode-icon icon-quiz">🎯</div>
+          <div class="central-mode-info">
+            <div class="central-mode-name">Quiz Fake Detector</div>
+            <div class="central-mode-desc">Teste seu olho crítico</div>
+          </div>
+        </button>
+
+        <!-- Status -->
+        <div class="central-status">
+          <div class="central-status-row">
+            <div class="status-dot online"></div>
+            <span>DataJud/CNJ — conectado</span>
+          </div>
+          <div class="central-status-row">
+            <div class="status-dot online"></div>
+            <span>Cloudflare Worker — online</span>
+          </div>
+          <div class="central-status-row">
+            <div class="status-dot warn"></div>
+            <span>Análise IA — modo local</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══ PAINEL PRINCIPAL ══ -->
+      <div class="central-main">
+
+        <!-- ── PAINEL 1: VERIFICADOR DE TEXTO ── -->
+        <div class="central-panel active" id="cPanel1">
+          <div class="central-panel-header">
+            <div>
+              <div class="central-panel-title">🔬 Verificador de Texto</div>
+              <div class="central-panel-desc">Cole qualquer ementa, acórdão ou decisão judicial. O sistema analisa sinais de alucinação gerada por IA em tempo real — sem conectar à internet.</div>
+            </div>
+            <span class="central-badge badge-ia">Análise Heurística</span>
+          </div>
+
+          <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;">
+            <span style="font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--text-muted);align-self:center;">Exemplos rápidos:</span>
+            <button class="central-sug-chip" onclick="centralPreencherExemplo('fake1')">🤖 Suspeito — Ministro STF no TJSP</button>
+            <button class="central-sug-chip" onclick="centralPreencherExemplo('fake2')">🤖 Falso — REsp com data futura</button>
+            <button class="central-sug-chip" onclick="centralPreencherExemplo('real1')">✅ Real — Súmula STJ</button>
+            <button class="central-sug-chip" onclick="centralPreencherExemplo('real2')">✅ Real — Decisão TST</button>
+          </div>
+
+          <textarea id="centralTexto" class="central-textarea"
+            placeholder="Cole aqui qualquer ementa, acórdão ou decisão judicial para análise automática de alucinação..."></textarea>
+
+          <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
+            <button class="central-btn-primary" onclick="centralAnalisar()">
+              <span id="centralAnalisarIcon">🔬</span> Analisar Texto
+            </button>
+            <button class="central-btn-sec" onclick="document.getElementById('centralTexto').value='';document.getElementById('centralDiag').innerHTML='';document.getElementById('centralDiag').style.display='none'">
+              ✕ Limpar
+            </button>
+            <span id="centralCharCount" style="font-size:11px;color:var(--text-muted);margin-left:auto;">0 caracteres</span>
+          </div>
+
+          <!-- Resultado do diagnóstico -->
+          <div id="centralDiag" class="central-diag-wrap" style="display:none;"></div>
+        </div>
+
+        <!-- ── PAINEL 2: CONSULTA DATAJUD ── -->
+        <div class="central-panel" id="cPanel2">
+          <div class="central-panel-header">
+            <div>
+              <div class="central-panel-title">⚡ Consulta DataJud</div>
+              <div class="central-panel-desc">Digite o número CNJ completo. Os dados são puxados diretamente da base oficial do CNJ via Cloudflare Worker — dados reais, zero alucinação.</div>
+            </div>
+            <span class="central-badge badge-real">Dados Reais · CNJ</span>
+          </div>
+
+          <!-- Badge tribunal detectado -->
+          <div class="central-trib-badge" id="centralTribBadge">
+            <span id="centralTribIcon">🏛️</span>
+            <div>
+              <div style="font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-bottom:2px;">Tribunal detectado</div>
+              <div id="centralTribName" style="font-size:13px;font-weight:600;color:var(--white);"></div>
+            </div>
+          </div>
+
+          <input type="text" id="centralProcesso" class="central-process-input"
+            placeholder="Ex: 1044244-17.2025.8.26.0100"
+            oninput="centralTribDetect(this.value)"
+            onkeydown="if(event.key==='Enter') centralConsultar()">
+
+          <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:16px;">
+            <button class="central-btn-primary" id="centralConsultarBtn" onclick="centralConsultar()">
+              <span id="centralConsultarIcon">🔍</span>
+              <span id="centralConsultarTxt">Consultar Processo</span>
+            </button>
+            <button class="central-btn-sec" onclick="document.getElementById('centralProcesso').value='';document.getElementById('centralTribBadge').classList.remove('show','fora');document.getElementById('centralDjResult').innerHTML='';document.getElementById('centralDjResult').style.display='none'">
+              ✕ Limpar
+            </button>
+          </div>
+
+          <!-- Processos de demonstração -->
+          <div style="font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--text-muted);margin-bottom:8px;">Processos verificados para demonstração:</div>
+          <div class="central-suggestions">
+            <button class="central-sug-chip" onclick="centralSetProcess('1044244-17.2025.8.26.0100')">TJSP · Apelação Cível</button>
+            <button class="central-sug-chip" onclick="centralSetProcess('1000194-05.2017.5.02.0038')">TST · Recurso de Revista</button>
+          </div>
+
+          <!-- Loading -->
+          <div class="central-loading" id="centralDjLoading">
+            <div class="central-spinner"></div>
+            <div class="central-loading-text">Consultando DataJud/CNJ...<br><span style="font-size:11px;opacity:0.6;">Dados reais em tempo real</span></div>
+          </div>
+
+          <!-- Resultado DataJud -->
+          <div id="centralDjResult" style="display:none;"></div>
+        </div>
+
+        <!-- ── PAINEL 3: BUSCA POR TEMA ── -->
+        <div class="central-panel" id="cPanel3">
+          <div class="central-panel-header">
+            <div>
+              <div class="central-panel-title">🔍 Busca por Tema</div>
+              <div class="central-panel-desc">Digite um tema jurídico e o sistema gera jurisprudências estruturadas baseadas em teses reais do STF, STJ e TST.</div>
+            </div>
+            <span class="central-badge badge-busca">Base Jurídica Local</span>
+          </div>
+
+          <div style="display:grid;grid-template-columns:1fr auto auto;gap:10px;margin-bottom:14px;">
+            <input type="text" id="centralBuscaTema" class="central-process-input" style="margin-bottom:0;"
+              placeholder="Ex: furto qualificado reincidência..."
+              onkeydown="if(event.key==='Enter') centralBuscar()">
+            <select id="centralBuscaTrib" style="background:rgba(0,0,0,0.25);border:1.5px solid var(--border);border-radius:12px;padding:0 14px;color:var(--white);font-family:'DM Sans',sans-serif;font-size:13px;outline:none;cursor:pointer;min-width:120px;">
+              <option value="qualquer">Qualquer</option>
+              <option value="STF">STF</option>
+              <option value="STJ">STJ</option>
+              <option value="TST">TST</option>
+              <option value="TJSP">TJSP</option>
+            </select>
+            <button class="central-btn-primary" id="centralBuscaBtn" onclick="centralBuscar()">
+              <span id="centralBuscaIcon">✨</span><span id="centralBuscaTxt">Buscar</span>
+            </button>
+          </div>
+
+          <div class="central-suggestions">
+            <button class="central-sug-chip" onclick="centralBuscaRapida('furto qualificado reincidência','STJ')">Furto qualificado · STJ</button>
+            <button class="central-sug-chip" onclick="centralBuscaRapida('dano moral plano de saúde','STJ')">Dano moral · plano de saúde</button>
+            <button class="central-sug-chip" onclick="centralBuscaRapida('horas extras motorista','TST')">Horas extras · TST</button>
+            <button class="central-sug-chip" onclick="centralBuscaRapida('LGPD responsabilidade civil','STJ')">LGPD · responsabilidade</button>
+            <button class="central-sug-chip" onclick="centralBuscaRapida('progressão regime hediondo','STF')">Progressão regime · STF</button>
+            <button class="central-sug-chip" onclick="centralBuscaRapida('inteligência artificial advocacia','STJ')">IA na advocacia · STJ</button>
+          </div>
+
+          <!-- Loading -->
+          <div class="central-loading" id="centralBuscaLoading">
+            <div class="central-spinner"></div>
+            <div class="central-loading-text">Buscando jurisprudências...</div>
+          </div>
+
+          <!-- Resultados -->
+          <div id="centralBuscaResult" style="display:none;flex-direction:column;gap:16px;margin-top:4px;"></div>
+        </div>
+
+        <!-- ── PAINEL 4: QUIZ FAKE DETECTOR ── -->
+        <div class="central-panel" id="cPanel4">
+          <div class="central-panel-header">
+            <div>
+              <div class="central-panel-title">🎯 Quiz Fake Detector</div>
+              <div class="central-panel-desc">Três rodadas, três cards — apenas uma jurisprudência é falsa. Você consegue identificar a alucinação de IA?</div>
+            </div>
+            <span class="central-badge badge-quiz">Desafio Interativo</span>
+          </div>
+
+          <!-- Placar -->
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:10px;">
+            <div style="display:flex;gap:6px;align-items:center;" id="centralRoundDots"></div>
+            <div style="font-size:13px;color:var(--text-muted);">
+              Acertos: <span id="centralQuizScore" style="color:var(--gold);font-weight:700;">0</span>
+              &nbsp;·&nbsp;
+              <button class="central-btn-sec" style="padding:6px 14px;font-size:12px;" onclick="centralQuizStart()">↺ Reiniciar</button>
+            </div>
+          </div>
+
+          <div id="centralQuizGrid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px;"></div>
+          <div class="detector-explain" id="centralQuizExplain" style="margin-top:16px;"></div>
+          <div id="centralQuizFinal" style="display:none;text-align:center;padding:40px 20px;"></div>
+        </div>
+
+      </div><!-- /central-main -->
+    </div><!-- /central-dashboard -->
+
   </section>
 
 </main>
@@ -5955,6 +6543,378 @@ function pwaToast(msg) {
   t.textContent = msg;
   t.classList.add('show');
   setTimeout(() => t.classList.remove('show'), 3200);
+}
+
+// =========================================================
+// CENTRAL DE INVESTIGAÇÃO — Engine JS
+// =========================================================
+
+// ── Admin gate ────────────────────────────────────────────
+(function checkAdmin() {
+  const ADMIN_EMAIL = 'crysmiguel1990@gmail.com';
+  const saved = localStorage.getItem('lexai_user_email') || '';
+  if (saved === ADMIN_EMAIL) {
+    const el = document.getElementById('adminNavBtn');
+    if (el) el.style.display = 'block';
+  }
+  // Permite login admin via console: lexaiAdminLogin('email')
+  window.lexaiAdminLogin = function(email) {
+    localStorage.setItem('lexai_user_email', email);
+    if (email === ADMIN_EMAIL) {
+      const el = document.getElementById('adminNavBtn');
+      if (el) el.style.display = 'block';
+      console.log('[LexAI] Modo admin ativado.');
+    }
+  };
+})();
+
+// ── Troca de modo dentro da Central ──────────────────────
+function centralMode(n) {
+  [1,2,3,4].forEach(i => {
+    document.getElementById('cBtn' + i).classList.remove('active');
+    document.getElementById('cPanel' + i).classList.remove('active');
+  });
+  document.getElementById('cBtn' + n).classList.add('active');
+  document.getElementById('cPanel' + n).classList.add('active');
+
+  // Inicia o quiz automaticamente ao entrar no painel 4
+  if (n === 4 && centralQuizState.round === 0 && centralQuizState.rounds.length === 0) {
+    centralQuizStart();
+  }
+}
+
+// ── PAINEL 1: Verificador de Texto ───────────────────────
+document.addEventListener('DOMContentLoaded', () => {
+  const ta = document.getElementById('centralTexto');
+  if (ta) ta.addEventListener('input', () => {
+    document.getElementById('centralCharCount').textContent = ta.value.length + ' caracteres';
+  });
+});
+
+function centralPreencherExemplo(key) {
+  const ta = document.getElementById('centralTexto');
+  if (ta && ANALISE_EXEMPLOS[key]) {
+    ta.value = ANALISE_EXEMPLOS[key];
+    ta.dispatchEvent(new Event('input'));
+  }
+}
+
+function centralAnalisar() {
+  const texto = (document.getElementById('centralTexto').value || '').trim();
+  if (!texto) { document.getElementById('centralTexto').focus(); return; }
+
+  const r = analisarHeuristica(texto);
+  const diag = document.getElementById('centralDiag');
+  diag.style.display = 'block';
+
+  const corBorda = r.nivel === 'real' ? 'rgba(74,222,128,0.3)' : r.nivel === 'suspeito' ? 'rgba(201,162,39,0.3)' : 'rgba(248,113,113,0.4)';
+  const corBg    = r.nivel === 'real' ? 'rgba(74,222,128,0.06)' : r.nivel === 'suspeito' ? 'rgba(201,162,39,0.06)' : 'rgba(248,113,113,0.07)';
+  const corPct   = r.nivel === 'real' ? '#4ADE80' : r.nivel === 'suspeito' ? 'var(--gold)' : '#F87171';
+  const corBar   = r.nivel === 'real' ? 'linear-gradient(90deg,#4ADE80,#86EFAC)' : r.nivel === 'suspeito' ? 'linear-gradient(90deg,var(--gold),var(--gold-light))' : 'linear-gradient(90deg,#F87171,#FCA5A5)';
+
+  const sinaisHTML = r.signals.length === 0
+    ? '<div style="font-size:13px;color:var(--text-muted);padding:8px 0;">Nenhum sinal identificado.</div>'
+    : r.signals.map(s => {
+        const bg = s.cor === 'red' ? 'rgba(248,113,113,0.12)' : s.cor === 'yellow' ? 'rgba(201,162,39,0.12)' : 'rgba(74,222,128,0.1)';
+        const co = s.cor === 'red' ? '#F87171' : s.cor === 'yellow' ? 'var(--gold)' : '#4ADE80';
+        return `<div style="display:flex;gap:10px;padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.05);">
+          <div style="width:26px;height:26px;border-radius:7px;background:${bg};display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;">${s.icon}</div>
+          <div style="flex:1;">
+            <div style="font-size:13px;font-weight:600;color:var(--white);margin-bottom:2px;">${s.nome}</div>
+            <div style="font-size:12px;color:#9AAFC8;line-height:1.5;">${s.desc}</div>
+            <div style="font-size:11px;font-weight:700;color:${co};margin-top:4px;background:${bg};display:inline-block;padding:2px 8px;border-radius:4px;">${s.peso}</div>
+          </div></div>`;
+      }).join('');
+
+  diag.innerHTML = `
+    <div style="background:${corBg};border:1.5px solid ${corBorda};border-radius:14px;padding:20px 22px;margin-top:0;">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
+        <div style="font-family:'Playfair Display',serif;font-size:18px;font-weight:700;color:${corPct};">${r.verdictText}</div>
+        <div style="font-size:32px;font-weight:700;color:${corPct};font-family:'DM Sans',sans-serif;letter-spacing:-1px;">${r.score}%</div>
+      </div>
+      <div style="height:8px;background:rgba(255,255,255,0.08);border-radius:4px;overflow:hidden;margin-bottom:16px;">
+        <div style="height:100%;width:0%;background:${corBar};border-radius:4px;transition:width 0.8s ease;" id="centralDiagBar"></div>
+      </div>
+      <div style="font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--text-muted);margin-bottom:10px;">Sinais identificados</div>
+      ${sinaisHTML}
+      <div style="margin-top:14px;padding:12px 16px;background:rgba(0,0,0,0.15);border-radius:10px;font-size:13px;color:#9AAFC8;line-height:1.6;">${r.summaryText}</div>
+    </div>`;
+
+  setTimeout(() => {
+    const bar = document.getElementById('centralDiagBar');
+    if (bar) bar.style.width = r.score + '%';
+  }, 60);
+}
+
+// ── PAINEL 2: Consulta DataJud ────────────────────────────
+function centralTribDetect(val) {
+  const badge = document.getElementById('centralTribBadge');
+  if (!val.trim()) { badge.classList.remove('show','fora'); return; }
+  const parsed = djParseNumero(val);
+  if (!parsed) { badge.classList.remove('show','fora'); return; }
+  if (parsed.fora_de_escopo) {
+    badge.classList.add('show','fora');
+    badge.classList.remove('show');
+    badge.style.display = 'flex';
+    badge.style.background = 'rgba(248,113,113,0.08)';
+    badge.style.borderColor = 'rgba(248,113,113,0.3)';
+    document.getElementById('centralTribIcon').textContent = '⊘';
+    document.getElementById('centralTribName').innerHTML = `<span style="color:#F87171;">Tribunal fora do escopo (${parsed.segmento})</span>`;
+    return;
+  }
+  badge.style.display = 'flex';
+  badge.style.background = 'rgba(74,222,128,0.08)';
+  badge.style.borderColor = 'rgba(74,222,128,0.25)';
+  document.getElementById('centralTribIcon').textContent = parsed.tribunal?.icon || '🏛️';
+  document.getElementById('centralTribName').textContent = parsed.tribunal?.nome + (parsed.isPinned ? ' ✦ Processo verificado' : '');
+}
+
+function centralSetProcess(num) {
+  document.getElementById('centralProcesso').value = num;
+  centralTribDetect(num);
+}
+
+async function centralConsultar() {
+  const rawNum = (document.getElementById('centralProcesso').value || '').trim();
+  if (!rawNum) { document.getElementById('centralProcesso').focus(); return; }
+
+  const parsed = djParseNumero(rawNum);
+  if (!parsed) {
+    document.getElementById('centralDjResult').style.display = 'block';
+    document.getElementById('centralDjResult').innerHTML = `<div style="color:#F87171;padding:16px;background:rgba(248,113,113,0.08);border:1px solid rgba(248,113,113,0.3);border-radius:12px;">Formato inválido. Use o padrão CNJ: <code>NNNNNNN-DD.AAAA.J.TR.OOOO</code></div>`;
+    return;
+  }
+  if (parsed.fora_de_escopo) {
+    document.getElementById('centralDjResult').style.display = 'block';
+    document.getElementById('centralDjResult').innerHTML = `<div style="color:#F87171;padding:16px;background:rgba(248,113,113,0.08);border:1px solid rgba(248,113,113,0.3);border-radius:12px;">⊘ Tribunal fora do escopo da plataforma LexAI (${parsed.segmento}).</div>`;
+    return;
+  }
+
+  // UI loading
+  const btn = document.getElementById('centralConsultarBtn');
+  const icon = document.getElementById('centralConsultarIcon');
+  const txt = document.getElementById('centralConsultarTxt');
+  btn.disabled = true; icon.textContent = '⏳'; txt.textContent = 'Consultando...';
+  document.getElementById('centralDjLoading').classList.add('show');
+  document.getElementById('centralDjResult').style.display = 'none';
+  document.getElementById('centralDjResult').innerHTML = '';
+
+  try {
+    // Processo pinado → hardcoded
+    if (parsed.isPinned) {
+      await new Promise(r => setTimeout(r, 600));
+      renderCentralDjResult([parsed.pinnedHit], false, parsed);
+      return;
+    }
+
+    // Chamada real via Worker
+    const resp = await fetch(parsed.endpoint, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ query: { match: { numeroProcesso: parsed.numeroLimpo } } })
+    });
+
+    if (!resp.ok) throw new Error(`HTTP_${resp.status}`);
+    const data = await resp.json();
+    const hits = data?.hits?.hits || [];
+
+    if (hits.length === 0) {
+      document.getElementById('centralDjResult').style.display = 'block';
+      document.getElementById('centralDjResult').innerHTML = `<div style="color:#FCA5A5;padding:16px;background:rgba(248,113,113,0.08);border:1px solid rgba(248,113,113,0.2);border-radius:12px;">🔍 Processo não encontrado na base do DataJud. Verifique o número e tente novamente.</div>`;
+    } else {
+      renderCentralDjResult(hits, false, parsed);
+    }
+
+  } catch(err) {
+    // Fallback mock
+    console.log('[Central DataJud] Fallback mock:', err.message);
+    renderCentralDjResult([djGerarMock(parsed)], true, parsed);
+  } finally {
+    document.getElementById('centralDjLoading').classList.remove('show');
+    btn.disabled = false; icon.textContent = '🔍'; txt.textContent = 'Consultar Processo';
+  }
+}
+
+function renderCentralDjResult(hits, isMock, parsed) {
+  const res = document.getElementById('centralDjResult');
+  res.style.display = 'block';
+  res.innerHTML = hits.map(h => djRenderResultComMock(h)).join('');
+}
+
+// ── PAINEL 3: Busca por Tema ──────────────────────────────
+function centralBuscaRapida(tema, trib) {
+  document.getElementById('centralBuscaTema').value = tema;
+  document.getElementById('centralBuscaTrib').value = trib;
+  centralBuscar();
+}
+
+async function centralBuscar() {
+  const tema = (document.getElementById('centralBuscaTema').value || '').trim();
+  const trib = document.getElementById('centralBuscaTrib').value;
+  const qtd  = 2;
+  if (!tema) { document.getElementById('centralBuscaTema').focus(); return; }
+
+  const btn = document.getElementById('centralBuscaBtn');
+  const icon = document.getElementById('centralBuscaIcon');
+  const txt = document.getElementById('centralBuscaTxt');
+  btn.disabled = true; icon.textContent = '⏳'; txt.textContent = 'Buscando...';
+  document.getElementById('centralBuscaLoading').classList.add('show');
+  document.getElementById('centralBuscaResult').style.display = 'none';
+
+  await new Promise(r => setTimeout(r, 900 + Math.random() * 600));
+
+  const teses = encontrarTeses(tema, trib, qtd);
+  const html  = teses.map((t, i) => {
+    const texto = formatarJurisprudencia(t, trib, i);
+    const id = 'cBusca_' + i;
+    return `<div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:14px;padding:20px 22px;">
+      <div style="font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--gold);margin-bottom:10px;">
+        🏛 ${trib === 'qualquer' ? 'STF / STJ / TST' : trib} — Jurisprudência ${i+1}
+      </div>
+      <div id="${id}" style="font-size:13px;color:#CBD5E1;line-height:1.8;margin-bottom:14px;font-style:italic;">${texto.trim().replace(/\n/g,'<br>')}</div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;">
+        <button onclick="centralEnviarParaVerificador('${id}')"
+          style="display:inline-flex;align-items:center;gap:6px;background:rgba(201,162,39,0.15);border:1px solid var(--gold);border-radius:8px;padding:7px 14px;font-size:12px;font-weight:700;color:var(--gold-light);cursor:pointer;font-family:'DM Sans',sans-serif;">
+          🔬 Analisar no Verificador
+        </button>
+        ${botoesVerificacao(texto.match(/\d{7}-\d{2}\.\d{4}\.\d\.\d{2,3}\.\d{4}/)?.[0] || '', trib)}
+      </div>
+    </div>`;
+  }).join('');
+
+  document.getElementById('centralBuscaLoading').classList.remove('show');
+  const res = document.getElementById('centralBuscaResult');
+  res.innerHTML = html;
+  res.style.display = 'flex';
+
+  btn.disabled = false; icon.textContent = '✨'; txt.textContent = 'Buscar';
+}
+
+function centralEnviarParaVerificador(cardId) {
+  const el = document.getElementById(cardId);
+  if (!el) return;
+  const ta = document.getElementById('centralTexto');
+  if (ta) { ta.value = el.innerText; ta.dispatchEvent(new Event('input')); }
+  centralMode(1);
+  setTimeout(() => centralAnalisar(), 150);
+}
+
+// ── PAINEL 4: Quiz Fake Detector ─────────────────────────
+const centralQuizState = { round: 0, score: 0, totalRounds: 3, answered: false, rounds: [] };
+
+function centralQuizStart() {
+  centralQuizState.score = 0;
+  centralQuizState.round = 0;
+  centralQuizState.answered = false;
+  centralQuizState.rounds = shuffleArray(detectorRounds).slice(0, centralQuizState.totalRounds);
+  document.getElementById('centralQuizScore').textContent = '0';
+  document.getElementById('centralQuizFinal').style.display = 'none';
+  document.getElementById('centralQuizExplain').classList.remove('show');
+  document.getElementById('centralQuizGrid').style.display = 'grid';
+  centralQuizRender();
+}
+
+function centralQuizRender() {
+  const total   = centralQuizState.totalRounds;
+  const current = centralQuizState.round;
+
+  // Dots
+  const dots = document.getElementById('centralRoundDots');
+  dots.innerHTML = Array.from({length: total}, (_, i) => {
+    const bg = i < current ? 'rgba(74,222,128,0.7)' : i === current ? 'var(--gold)' : 'rgba(255,255,255,0.15)';
+    return `<div style="width:10px;height:10px;border-radius:50%;background:${bg};transition:background 0.3s;"></div>`;
+  }).join('') + `<span style="font-size:12px;color:var(--text-muted);margin-left:8px;">Rodada ${current+1} de ${total}</span>`;
+
+  document.getElementById('centralQuizExplain').classList.remove('show');
+  centralQuizState.answered = false;
+
+  const round = centralQuizState.rounds[current];
+  const cards = shuffleArray(round.cards);
+  const grid  = document.getElementById('centralQuizGrid');
+  grid.innerHTML = '';
+
+  cards.forEach((card, i) => {
+    const div = document.createElement('div');
+    div.className = 'juris-card';
+    div.dataset.fake = card.fake ? '1' : '0';
+    div.dataset.explanation = card.explanation || '';
+    div.innerHTML = `
+      <div class="juris-label">Exemplo ${String.fromCharCode(65+i)}</div>
+      <div class="juris-tribunal">${card.tribunal}</div>
+      <div class="juris-text">${card.text}</div>
+      <div class="juris-ref">${card.ref}</div>
+      <button class="juris-select-btn" onclick="centralQuizCheck(${i})">Esta é a falsa</button>`;
+    grid.appendChild(div);
+  });
+}
+
+function centralQuizCheck(idx) {
+  if (centralQuizState.answered) return;
+  centralQuizState.answered = true;
+
+  const grid  = document.getElementById('centralQuizGrid');
+  const cards = grid.querySelectorAll('.juris-card');
+  cards.forEach(c => { c.querySelectorAll('.juris-select-btn').forEach(b => b.style.display='none'); c.classList.add('revealed'); });
+
+  let fakeIdx = -1;
+  cards.forEach((c, i) => { if (c.dataset.fake === '1') fakeIdx = i; });
+
+  const correct = idx === fakeIdx;
+  if (correct) centralQuizState.score++;
+  document.getElementById('centralQuizScore').textContent = centralQuizState.score;
+
+  cards.forEach(c => {
+    const badge = document.createElement('div');
+    badge.style.marginTop = '10px';
+    if (c.dataset.fake === '1') {
+      c.classList.add('fake-card');
+      badge.innerHTML = '<span class="result-badge badge-fake">🤖 Fabricada por IA — FALSA</span>';
+    } else {
+      c.classList.add('real-card');
+      badge.innerHTML = '<span class="result-badge badge-real">✅ Jurisprudência Real</span>';
+    }
+    c.appendChild(badge);
+  });
+
+  const fakeEl  = grid.querySelector('.juris-card[data-fake="1"]');
+  const explain = document.getElementById('centralQuizExplain');
+  document.getElementById('explainTitle').textContent = correct ? '🎯 Correto! Você identificou a jurisprudência falsa.' : '⚠️ Não foi dessa vez!';
+  document.getElementById('explainText').innerHTML  = (fakeEl?.dataset.explanation || '') + '<br><br>📚 Sempre verifique em fontes oficiais antes de usar em petições.';
+
+  const isLast = centralQuizState.round >= centralQuizState.totalRounds - 1;
+  document.getElementById('detectorNextBtn').textContent = isLast ? 'Ver resultado →' : 'Próxima →';
+  document.getElementById('detectorNextBtn').style.display = 'inline-block';
+  document.getElementById('detectorNextBtn').onclick = centralQuizNext;
+  explain.classList.add('show');
+}
+
+function centralQuizNext() {
+  centralQuizState.round++;
+  if (centralQuizState.round >= centralQuizState.totalRounds) {
+    centralQuizFinal();
+  } else {
+    document.getElementById('centralQuizExplain').classList.remove('show');
+    centralQuizRender();
+  }
+}
+
+function centralQuizFinal() {
+  document.getElementById('centralQuizGrid').style.display = 'none';
+  document.getElementById('centralQuizExplain').classList.remove('show');
+  const s = centralQuizState.score, t = centralQuizState.totalRounds;
+  const msgs = [
+    'Não desanime! As alucinações de IA são muito convincentes. Continue praticando.',
+    'Bom resultado! Atenção crítica demonstrada. Um erro pode custar caro na prática.',
+    'Excelente! Olhar apurado para alucinações — fundamental na Advocacia 4.0!'
+  ];
+  const final = document.getElementById('centralQuizFinal');
+  final.style.display = 'block';
+  final.innerHTML = `
+    <div style="font-size:48px;margin-bottom:12px;">🏆</div>
+    <div style="font-family:'Playfair Display',serif;font-size:22px;font-weight:700;color:var(--white);margin-bottom:8px;">Desafio concluído!</div>
+    <div style="font-size:52px;font-weight:900;color:var(--gold);font-family:'DM Sans',sans-serif;letter-spacing:-1px;margin:8px 0;">${s}/${t}</div>
+    <div style="font-size:14px;color:var(--text-muted);max-width:400px;margin:0 auto 24px;line-height:1.7;">${msgs[Math.min(s,2)]}</div>
+    <button class="central-btn-sec" onclick="centralQuizStart()">↺ Jogar novamente</button>`;
 }
 
 </script>
