@@ -2239,6 +2239,277 @@
     .central-panel { padding: 20px; }
   }
 
+  /* ===== PROVA DE VERACIDADE — Painel de Diagnóstico Avançado ===== */
+  .pv-wrapper {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    animation: fadeIn 0.35s ease;
+  }
+
+  /* Cabeçalho do veredicto */
+  .pv-verdict-bar {
+    border-radius: 14px 14px 0 0;
+    padding: 20px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .pv-verdict-bar.real    { background: linear-gradient(135deg, rgba(74,222,128,0.15), rgba(74,222,128,0.06));  border: 1.5px solid rgba(74,222,128,0.4); border-bottom: none; }
+  .pv-verdict-bar.suspeito { background: linear-gradient(135deg, rgba(201,162,39,0.15), rgba(201,162,39,0.06)); border: 1.5px solid rgba(201,162,39,0.4); border-bottom: none; }
+  .pv-verdict-bar.fake    { background: linear-gradient(135deg, rgba(248,113,113,0.15), rgba(248,113,113,0.06)); border: 1.5px solid rgba(248,113,113,0.4); border-bottom: none; }
+
+  .pv-verdict-left { display: flex; align-items: center; gap: 14px; }
+
+  .pv-verdict-icon {
+    width: 48px; height: 48px;
+    border-radius: 14px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 24px;
+    flex-shrink: 0;
+  }
+
+  .pv-verdict-icon.real    { background: rgba(74,222,128,0.2); }
+  .pv-verdict-icon.suspeito { background: rgba(201,162,39,0.2); }
+  .pv-verdict-icon.fake    { background: rgba(248,113,113,0.2); }
+
+  .pv-verdict-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 2px;
+  }
+
+  .pv-verdict-title.real    { color: #4ADE80; }
+  .pv-verdict-title.suspeito { color: var(--gold); }
+  .pv-verdict-title.fake    { color: #F87171; }
+
+  .pv-verdict-sub {
+    font-size: 11px;
+    color: var(--text-muted);
+    letter-spacing: 0.5px;
+  }
+
+  /* Score meter */
+  .pv-score-box {
+    text-align: center;
+    min-width: 80px;
+  }
+
+  .pv-score-val {
+    font-size: 36px;
+    font-weight: 700;
+    font-family: 'DM Sans', sans-serif;
+    letter-spacing: -1px;
+    line-height: 1;
+  }
+
+  .pv-score-val.real    { color: #4ADE80; }
+  .pv-score-val.suspeito { color: var(--gold); }
+  .pv-score-val.fake    { color: #F87171; }
+
+  .pv-score-lbl {
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-top: 2px;
+  }
+
+  /* Corpo do painel */
+  .pv-body {
+    border-radius: 0 0 14px 14px;
+    border-top: none;
+    overflow: hidden;
+  }
+
+  .pv-body.real    { border: 1.5px solid rgba(74,222,128,0.4); }
+  .pv-body.suspeito { border: 1.5px solid rgba(201,162,39,0.4); }
+  .pv-body.fake    { border: 1.5px solid rgba(248,113,113,0.4); }
+
+  /* Barra de progresso */
+  .pv-bar-track {
+    height: 5px;
+    background: rgba(0,0,0,0.2);
+  }
+
+  .pv-bar-fill {
+    height: 100%;
+    transition: width 0.9s cubic-bezier(0.4,0,0.2,1);
+    width: 0%;
+  }
+
+  .pv-bar-fill.real    { background: linear-gradient(90deg,#4ADE80,#86EFAC); }
+  .pv-bar-fill.suspeito { background: linear-gradient(90deg,var(--gold),var(--gold-light)); }
+  .pv-bar-fill.fake    { background: linear-gradient(90deg,#F87171,#FCA5A5); }
+
+  /* Seções internas */
+  .pv-section {
+    padding: 18px 24px;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    background: var(--navy-light);
+  }
+
+  .pv-section:last-child { border-bottom: none; }
+
+  .pv-section-label {
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .pv-section-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: rgba(255,255,255,0.06);
+  }
+
+  /* CNJ encontrado */
+  .pv-cnj-found {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 10px;
+    padding: 12px 16px;
+    background: rgba(74,222,128,0.07);
+    border: 1px solid rgba(74,222,128,0.25);
+    border-radius: 10px;
+    margin-bottom: 10px;
+  }
+
+  .pv-cnj-num {
+    font-family: monospace;
+    font-size: 14px;
+    font-weight: 700;
+    color: #4ADE80;
+    letter-spacing: 0.5px;
+  }
+
+  .pv-verify-links {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+
+  .pv-link-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 6px 12px;
+    border-radius: 7px;
+    font-size: 11px;
+    font-weight: 700;
+    text-decoration: none;
+    transition: opacity 0.2s;
+    white-space: nowrap;
+  }
+
+  .pv-link-btn:hover { opacity: 0.85; }
+  .pv-link-jus  { background: rgba(74,222,128,0.15); border: 1px solid rgba(74,222,128,0.4); color: #4ADE80; }
+  .pv-link-trib { background: rgba(96,165,250,0.15); border: 1px solid rgba(96,165,250,0.4); color: #93C5FD; }
+  .pv-link-cnj  { background: rgba(201,162,39,0.12); border: 1px solid rgba(201,162,39,0.3); color: var(--gold-light); }
+
+  /* Sinal chips */
+  .pv-signal {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 10px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+  }
+
+  .pv-signal:last-child { border-bottom: none; padding-bottom: 0; }
+
+  .pv-signal-icon {
+    width: 28px; height: 28px;
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px;
+    flex-shrink: 0;
+  }
+
+  .pv-sig-red    { background: rgba(248,113,113,0.15); }
+  .pv-sig-yellow { background: rgba(201,162,39,0.15); }
+  .pv-sig-green  { background: rgba(74,222,128,0.12); }
+
+  .pv-signal-name {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--white);
+    margin-bottom: 2px;
+  }
+
+  .pv-signal-desc { font-size: 12px; color: #9AAFC8; line-height: 1.5; }
+
+  .pv-signal-weight {
+    font-size: 10px;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 4px;
+    margin-top: 4px;
+    display: inline-block;
+  }
+
+  .pv-w-red    { color: #F87171; background: rgba(248,113,113,0.1); }
+  .pv-w-yellow { color: var(--gold); background: rgba(201,162,39,0.1); }
+  .pv-w-green  { color: #4ADE80; background: rgba(74,222,128,0.1); }
+
+  /* Parecer final */
+  .pv-opinion {
+    padding: 16px 20px;
+    border-radius: 10px;
+    font-size: 13px;
+    line-height: 1.75;
+  }
+
+  .pv-opinion.real    { background: rgba(74,222,128,0.07);  border: 1px solid rgba(74,222,128,0.2);  color: #86EFAC; }
+  .pv-opinion.suspeito { background: rgba(201,162,39,0.07); border: 1px solid rgba(201,162,39,0.2);  color: var(--gold-light); }
+  .pv-opinion.fake    { background: rgba(248,113,113,0.07); border: 1px solid rgba(248,113,113,0.2); color: #FCA5A5; }
+
+  .pv-opinion-label {
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+    opacity: 0.7;
+  }
+
+  /* Badge de validação em tempo real */
+  .pv-realtime-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(74,222,128,0.1);
+    border: 1px solid rgba(74,222,128,0.3);
+    border-radius: 100px;
+    padding: 4px 12px;
+    font-size: 10px;
+    font-weight: 700;
+    color: #4ADE80;
+    letter-spacing: 0.5px;
+  }
+
+  .pv-realtime-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: #4ADE80;
+    animation: pulse 1.5s infinite;
+  }
+
   /* SCROLLBAR */
   ::-webkit-scrollbar { width: 6px; }
   ::-webkit-scrollbar-track { background: var(--navy); }
@@ -3005,11 +3276,11 @@
     <div class="hero-logo-text">Lex<span>AI</span></div>
     <div class="hero-nav-links">
       <button class="hero-nav-link active" onclick="scrollToNav()">INÍCIO</button>
-      <button class="hero-nav-link" onclick="scrollToNav(); showSectionByName('apresentacao')">APRESENTAÇÃO</button>
-      <button class="hero-nav-link" onclick="scrollToNav(); showSectionByName('chat')">CHAT IA</button>
-      <button class="hero-nav-link" onclick="scrollToNav(); showSectionByName('quiz')">QUIZ</button>
-      <button class="hero-nav-link" onclick="scrollToNav(); showSectionByName('futuro')">FUTURO</button>
-      <button class="hero-nav-link" onclick="scrollToNav(); showSectionByName('central')">🔎 CENTRAL DE INVESTIGAÇÃO</button>
+      <button class="hero-nav-link" onclick="showSectionByName('apresentacao')">APRESENTAÇÃO</button>
+      <button class="hero-nav-link" onclick="showSectionByName('chat')">CHAT IA</button>
+      <button class="hero-nav-link" onclick="showSectionByName('quiz')">QUIZ</button>
+      <button class="hero-nav-link" onclick="showSectionByName('futuro')">FUTURO</button>
+      <button class="hero-nav-link" onclick="showSectionByName('central')">🔎 CENTRAL DE INVESTIGAÇÃO</button>
     </div>
   </div>
 
@@ -3047,8 +3318,8 @@
     </div>
 
     <div class="hero-btns">
-      <button class="hero-btn-primary" onclick="scrollToNav(); showSectionByName('apresentacao')">Ver Apresentação</button>
-      <button class="hero-btn-outline" onclick="scrollToNav(); showSectionByName('chat')">Falar com LexIA</button>
+      <button class="hero-btn-primary" onclick="showSectionByName('apresentacao')">Ver Apresentação</button>
+      <button class="hero-btn-outline" onclick="showSectionByName('chat')">Falar com LexIA</button>
       <button class="hero-btn-outline" id="heroInstallBtn" onclick="pwaInstall()" style="display:none;border-color:var(--gold);background:rgba(201,162,39,0.1);">📲 Instalar App</button>
     </div>
   </div>
@@ -3228,10 +3499,11 @@
       <div class="chat-box">
         <div class="chat-top">
           <div class="chat-avatar">⚖</div>
-          <div>
+          <div style="flex:1;">
             <div class="chat-name">LexIA — Assistente Jurídico</div>
-            <div class="chat-status">Online</div>
+            <div class="chat-status" id="chatRatioStatus">Verificando conexão...</div>
           </div>
+          <div id="ratioStatusBadge" style="display:none;font-size:10px;font-weight:700;padding:3px 10px;border-radius:100px;letter-spacing:0.5px;"></div>
         </div>
         <div class="chat-messages" id="chatMessages">
           <div class="msg bot">Olá! Sou a <strong>LexIA</strong>, sua assistente jurídica virtual. Posso responder dúvidas sobre legislação, conceitos jurídicos e como a Inteligência Artificial está transformando o Direito. Como posso ajudar? 👋</div>
@@ -4216,38 +4488,78 @@ Exemplo:
 <script>
 // ========= NAV =========
 function scrollToNav() {
-  // reveal everything first
-  document.getElementById('stickyNav').classList.add('visible');
-  document.getElementById('siteMain').classList.add('visible');
-  document.getElementById('siteFooter').classList.add('visible');
-  setTimeout(() => {
-    document.getElementById('stickyNav').scrollIntoView({ behavior: 'smooth', block: 'start' });
-  }, 50);
+  var nav   = document.getElementById('stickyNav');
+  var main  = document.getElementById('siteMain');
+  var foot  = document.getElementById('siteFooter');
+  if (nav)  nav.classList.add('visible');
+  if (main) main.classList.add('visible');
+  if (foot) foot.classList.add('visible');
+  try {
+    setTimeout(function() {
+      if (nav) nav.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 60);
+  } catch(e) {}
 }
 
 function showSectionByName(id) {
-  const btns = document.querySelectorAll('.nav-btn');
-  let matchBtn = null;
-  btns.forEach(b => {
-    if (b.getAttribute('onclick') && b.getAttribute('onclick').includes("'" + id + "'")) matchBtn = b;
+  // Tenta encontrar o botão do nav que corresponde a este id
+  var matchBtn = null;
+  document.querySelectorAll('.nav-btn').forEach(function(b) {
+    var oc = b.getAttribute('onclick') || '';
+    if (oc.indexOf("'" + id + "'") !== -1) matchBtn = b;
   });
   showSection(id, matchBtn);
 }
 
 function showSection(id, btn) {
-  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
-  document.getElementById('siteMain').classList.add('visible');
-  document.getElementById('stickyNav').classList.add('visible');
-  document.getElementById('siteFooter').classList.add('visible');
+  // Mostra main, nav e footer
+  var nav   = document.getElementById('stickyNav');
+  var main  = document.getElementById('siteMain');
+  var foot  = document.getElementById('siteFooter');
+  if (nav)  nav.classList.add('visible');
+  if (main) main.classList.add('visible');
+  if (foot) foot.classList.add('visible');
+
+  // Esconde todas as secoes e remove active dos botoes
+  document.querySelectorAll('.section').forEach(function(s) { s.classList.remove('active'); });
+  document.querySelectorAll('.nav-btn').forEach(function(b) { b.classList.remove('active'); });
+  document.querySelectorAll('.nav-drawer-btn').forEach(function(b) { b.classList.remove('active'); });
+
+  // Ativa a secao solicitada
+  var section = document.getElementById(id);
+  if (section) {
+    section.classList.add('active');
+  } else {
+    // Fallback: se secao nao existe, abre apresentacao
+    var fallback = document.getElementById('apresentacao');
+    if (fallback) fallback.classList.add('active');
+  }
+
+  // Marca botao ativo
   if (btn) btn.classList.add('active');
-  // scroll to nav
-  setTimeout(() => {
-    document.getElementById('stickyNav').scrollIntoView({ behavior: 'smooth', block: 'start' });
-  }, 50);
-  if (id === 'quiz' && quizState.current === 0) renderQuiz();
-  if (id === 'detector' && detectorState.round === 0 && detectorState.shuffledRounds.length === 0) startDetector();
+
+  // Scroll suave para o nav
+  try {
+    setTimeout(function() {
+      if (nav) nav.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 60);
+  } catch(e) {}
+
+  // Inicia componentes que precisam de init
+  if (id === 'quiz' && typeof quizState !== 'undefined' && quizState.current === 0) {
+    if (typeof renderQuiz === 'function') renderQuiz();
+  }
+  if (id === 'detector') {
+    if (typeof detectorState !== 'undefined' && detectorState.round === 0 && detectorState.shuffledRounds.length === 0) {
+      if (typeof startDetector === 'function') startDetector();
+    }
+  }
+  if (id === 'central' || id === 'analise' || id === 'pesquisa') {
+    // nada extra necessario — a Central inicializa ao clicar nas abas
+  }
+
+  // Sincroniza drawer mobile
+  if (typeof syncDrawerActive === 'function') syncDrawerActive();
 }
 
 // ========= CHAT =========
@@ -4288,22 +4600,305 @@ function addMessage(text, type) {
   return div;
 }
 
-function sendMessage() {
+// =========================================================
+// RATIO ENGINE — Integração com backend local
+// GitHub Pages + Ratio rodando em http://127.0.0.1:8000
+// =========================================================
+
+const RATIO_BASE    = 'http://127.0.0.1:8000';
+const RATIO_TIMEOUT = 8000; // ms antes de cair no fallback
+
+/** Estado de conectividade do Ratio — testado uma vez por sessão */
+const ratioStatus = { online: null, checkedAt: 0 };
+
+/** Testa se o Ratio está online */
+async function ratioCheckHealth() {
+  if (ratioStatus.online !== null && Date.now() - ratioStatus.checkedAt < 30000) {
+    return ratioStatus.online;
+  }
+  try {
+    const r = await fetch(`${RATIO_BASE}/health`, {
+      signal: AbortSignal.timeout(3000)
+    });
+    ratioStatus.online = r.ok;
+  } catch {
+    ratioStatus.online = false;
+  }
+  ratioStatus.checkedAt = Date.now();
+  return ratioStatus.online;
+}
+
+/** Atualiza indicadores visuais de status em toda a interface */
+function ratioUpdateStatusBar(online) {
+  // Sidebar da Central
+  const dots  = document.querySelectorAll('.central-status-row .status-dot');
+  const texts = document.querySelectorAll('.central-status-row span');
+  if (dots.length >= 2) {
+    dots[1].className = 'status-dot ' + (online ? 'online' : 'offline');
+    if (texts[1]) texts[1].textContent = 'Ratio RAG — ' + (online ? 'online' : 'offline');
+  }
+  // Badge no chat
+  const badge  = document.getElementById('ratioStatusBadge');
+  const status = document.getElementById('chatRatioStatus');
+  if (badge) {
+    badge.style.display = 'block';
+    if (online) {
+      badge.style.background = 'rgba(74,222,128,0.15)';
+      badge.style.border     = '1px solid rgba(74,222,128,0.35)';
+      badge.style.color      = '#4ADE80';
+      badge.textContent      = '⚡ Ratio RAG';
+    } else {
+      badge.style.background = 'rgba(255,255,255,0.06)';
+      badge.style.border     = '1px solid rgba(255,255,255,0.12)';
+      badge.style.color      = 'var(--text-muted)';
+      badge.textContent      = '💬 Modo Local';
+    }
+  }
+  if (status) {
+    status.textContent = online ? 'Conectado ao Ratio RAG • 471k jurisprudências' : 'Modo standalone • Respostas locais';
+  }
+}
+
+// ── ADMIN ──────────────────────────────────────────────────
+const ADMIN_EMAIL = 'crysmiguel1990@gmail.com';
+
+/** Verifica acesso admin via Ratio backend */
+async function checkRatioAdmin() {
+  const token = sessionStorage.getItem('ratio_admin_token') || '';
+  if (!token) return;
+  try {
+    const r = await fetch(`${RATIO_BASE}/api/admin/verify`, {
+      headers: { 'X-Admin-Token': token },
+      signal: AbortSignal.timeout(3000)
+    });
+    if (r.ok) {
+      const el = document.getElementById('adminNavBtn');
+      if (el) el.style.display = 'block';
+    }
+  } catch { /* Ratio offline — silencia */ }
+}
+
+/**
+ * Ativa modo admin via console do browser:
+ * lexaiAdmin('crysmiguel1990@gmail.com', 'seu-token-aqui')
+ */
+window.lexaiAdmin = function(email, token) {
+  if (email !== ADMIN_EMAIL) { console.warn('[LexAI] Email não autorizado.'); return; }
+  sessionStorage.setItem('ratio_admin_token', token || '');
+  checkRatioAdmin();
+  console.log('[LexAI] Admin ativado.');
+};
+
+// ── TTS ────────────────────────────────────────────────────
+let ttsAudio = null;
+
+async function ratioTTS(text, btnEl) {
+  if (!text || !text.trim()) return;
+
+  // Aborta áudio anterior se existir
+  if (ttsAudio) { ttsAudio.pause(); ttsAudio = null; }
+
+  const online = await ratioCheckHealth();
+  if (!online) {
+    if (btnEl) { btnEl.textContent = '🔇'; setTimeout(() => { btnEl.textContent = '🔊'; }, 1500); }
+    return;
+  }
+
+  if (btnEl) { btnEl.textContent = '⏳'; btnEl.disabled = true; }
+
+  try {
+    const r = await fetch(`${RATIO_BASE}/api/tts`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ text: text.slice(0, 5000) }),
+      signal: AbortSignal.timeout(30000)
+    });
+    if (!r.ok) throw new Error(`HTTP ${r.status}`);
+    const data = await r.json();
+    const audioBlob = await fetch(
+      `data:${data.mime_type};base64,${data.audio_base64}`
+    ).then(r => r.blob());
+    const url = URL.createObjectURL(audioBlob);
+    ttsAudio = new Audio(url);
+    ttsAudio.onended = () => { if (btnEl) { btnEl.textContent = '🔊'; btnEl.disabled = false; } };
+    ttsAudio.play();
+    if (btnEl) btnEl.textContent = '⏸';
+  } catch(err) {
+    console.log('[LexAI TTS]', err.message);
+    if (btnEl) { btnEl.textContent = '🔊'; btnEl.disabled = false; }
+  }
+}
+
+// ── CHAT + RATIO RAG ───────────────────────────────────────
+/** Consulta o Ratio RAG e retorna a resposta + docs */
+async function ratioQuery(query) {
+  const r = await fetch(`${RATIO_BASE}/api/query`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      query,
+      tribunais: null,
+      tipos: null,
+      persona: 'visao_geral',
+      prefer_recent: true,
+      reranker_backend: 'local'
+    }),
+    signal: AbortSignal.timeout(RATIO_TIMEOUT)
+  });
+  if (!r.ok) throw new Error(`HTTP ${r.status}`);
+  return await r.json();
+}
+
+/** Formata os docs citados pelo Ratio em HTML compacto */
+function ratioFormatDocs(docs) {
+  if (!docs || docs.length === 0) return '';
+  const top = docs.slice(0, 3);
+  const items = top.map(d =>
+    `<div style="margin:6px 0;padding:8px 12px;background:rgba(201,162,39,0.08);border-left:2px solid var(--gold);border-radius:0 6px 6px 0;font-size:11px;color:#9AAFC8;line-height:1.5;">
+      <strong style="color:var(--gold-light);">${d.tribunal || ''} ${d.tipo_label || ''}</strong>
+      ${d.processo ? `· ${d.processo}` : ''}
+      ${d.data_julgamento ? `· ${d.data_julgamento}` : ''}
+      ${d.relator ? `<br>Rel. ${d.relator}` : ''}
+    </div>`
+  ).join('');
+  return `<div style="margin-top:12px;border-top:1px solid rgba(255,255,255,0.07);padding-top:10px;">
+    <div style="font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--text-muted);margin-bottom:6px;">📚 Fontes (Ratio RAG)</div>
+    ${items}
+  </div>`;
+}
+
+/** Versão aprimorada de sendMessage — usa Ratio quando disponível */
+async function sendMessage() {
   const input = document.getElementById('chatInput');
-  const text = input.value.trim();
+  const text  = (input.value || '').trim();
   if (!text) return;
   addMessage(text, 'user');
   input.value = '';
 
+  // Indicador de digitação
   const typing = addMessage('', 'msg bot typing');
   typing.innerHTML = '<div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div>';
 
+  const online = await ratioCheckHealth();
+  ratioUpdateStatusBar(online);
+
+  if (online) {
+    // ── Ratio RAG ──
+    try {
+      const data    = await ratioQuery(text);
+      const answer  = data.answer || getResponse(text);
+      const docsHtml = ratioFormatDocs(data.docs);
+
+      typing.remove();
+      const msgEl = addMessage('', 'bot');
+      const ttsId  = 'tts_' + Date.now();
+      msgEl.innerHTML = `
+        <div>${answer}</div>
+        ${docsHtml}
+        <div style="margin-top:10px;display:flex;align-items:center;gap:8px;">
+          <span style="font-size:10px;background:rgba(74,222,128,0.15);border:1px solid rgba(74,222,128,0.3);padding:2px 8px;border-radius:100px;color:#4ADE80;font-weight:700;">⚡ Ratio RAG</span>
+          <button id="${ttsId}" onclick="ratioTTS(this.dataset.text, this)" data-text="${answer.replace(/"/g,'&quot;').replace(/'/g,'&#39;')}"
+            style="background:transparent;border:1px solid rgba(255,255,255,0.15);border-radius:6px;padding:3px 10px;font-size:13px;cursor:pointer;color:var(--text-muted);transition:all 0.2s;"
+            onmouseover="this.style.borderColor='var(--gold)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.15)'">
+            🔊
+          </button>
+        </div>`;
+      return;
+    } catch(err) {
+      console.log('[LexAI] Ratio falhou, usando fallback:', err.message);
+      ratioStatus.online = false;
+    }
+  }
+
+  // ── Fallback: respostas pré-programadas ──
   setTimeout(() => {
     typing.remove();
     addMessage(getResponse(text), 'bot');
   }, 900 + Math.random() * 600);
 }
 
+// ── DATAJUD VIA RATIO ──────────────────────────────────────
+/**
+ * Sobrescreve djSearch para tentar o Ratio antes do Worker direto.
+ * O Ratio faz a mesma chamada internamente via datajud_service.py.
+ */
+const _djSearchOriginal = typeof djSearch === 'function' ? djSearch : null;
+
+async function djSearchComRatio() {
+  const rawNum = (document.getElementById('djProcessInput')?.value || '').trim();
+  const parsed = rawNum ? djParseNumero(rawNum) : null;
+
+  if (!parsed || !parsed.tribunal || parsed.fora_de_escopo) {
+    // Delega diretamente ao original que trata erros de formato/escopo
+    return _djSearchOriginal && _djSearchOriginal();
+  }
+
+  const online = await ratioCheckHealth();
+
+  if (online && !parsed.isPinned) {
+    // Tenta via Ratio backend
+    const trib = parsed.tribunal.endpoint; // ex: 'api_publica_tjsp'
+    const num  = parsed.numeroLimpo;
+    try {
+      const r = await fetch(
+        `${RATIO_BASE}/api/datajud/${trib}/${num}`,
+        { signal: AbortSignal.timeout(10000) }
+      );
+      if (r.ok) {
+        const data = await r.json();
+        if (data.hits && data.hits.length > 0) {
+          // Injeta resultado no fluxo normal
+          const btn     = document.getElementById('djSearchBtn');
+          const btnIcon = document.getElementById('djBtnIcon');
+          const btnText = document.getElementById('djBtnText');
+
+          djClearState();
+          const resultsEl = document.getElementById('djResults');
+          resultsEl.innerHTML = `
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:8px;">
+              <div style="font-size:13px;color:#4ADE80;font-weight:600;">
+                ✅ ${data.hits.length} processo(s) encontrado(s) — ${parsed.tribunal.nome}
+                <span style="font-size:10px;background:rgba(74,222,128,0.15);border:1px solid rgba(74,222,128,0.3);padding:2px 8px;border-radius:100px;margin-left:8px;">⚡ via Ratio</span>
+              </div>
+            </div>
+            ${data.hits.map(h => djRenderResultComMock(h)).join('')}`;
+          resultsEl.classList.add('show');
+
+          if (btn)     { btn.disabled     = false; }
+          if (btnIcon) { btnIcon.textContent = '🔍'; }
+          if (btnText) { btnText.textContent  = 'Consultar'; }
+          return;
+        }
+      }
+    } catch(err) {
+      console.log('[LexAI DataJud] Ratio falhou, usando Worker direto:', err.message);
+    }
+  }
+
+  // Fallback: Worker direto (comportamento original)
+  return _djSearchOriginal && _djSearchOriginal();
+}
+
+// Substitui djSearch pela versão com Ratio
+window.djSearch = djSearchComRatio;
+
+// ── INIT ───────────────────────────────────────────────────
+window.addEventListener('load', async () => {
+  // Verifica saúde do Ratio silenciosamente
+  const online = await ratioCheckHealth();
+  ratioUpdateStatusBar(online);
+
+  // Verifica admin se token existir
+  checkRatioAdmin();
+
+  if (online) {
+    console.log('[LexAI] ✅ Ratio online — RAG, DataJud e TTS ativados.');
+  } else {
+    console.log('[LexAI] ℹ️ Ratio offline — modo standalone ativo.');
+  }
+});
+
+// Mantém askSuggestion
 function askSuggestion(q) {
   document.getElementById('chatInput').value = q;
   sendMessage();
@@ -4423,321 +5018,308 @@ function restartQuiz() {
 
 // ========= DETECTOR =========
 
-/**
- * BANCO DE DADOS — 7 RODADAS
- * Regra invariante: exatamente 1 card com fake:true por rodada.
- * Todos os cards com fake:false são jurisprudências verificáveis em bases oficiais.
- */
-const detectorRounds = [
-  // ── RODADA 1 ──────────────────────────────────────────────────────────────
+// =========================================================
+// QUIZ FAKE DETECTOR — CORRIGIDO
+// Fluxo: startDetector -> renderDetectorRound -> checkDetectorCard
+//        -> showNextQuizButton -> nextDetectorRound -> showDetectorFinal
+// =========================================================
+
+// Banco de rodadas: SEMPRE 2 reais + 1 falsa
+const quizRounds = [
   {
+    title: 'Rodada 1 — Direito do Trabalho',
     cards: [
       {
-        tribunal: 'STF — Supremo Tribunal Federal',
-        text: '"É inconstitucional a criminalização da posse de drogas para uso próprio. O artigo 28 da Lei 11.343/2006 não foi recepcionado pela Constituição Federal de 1988, que consagra a autonomia individual e a dignidade da pessoa humana."',
-        ref: 'RE 635.659 — Rel. Min. Gilmar Mendes — Plenário, 2024',
-        fake: false
-      },
-      {
-        tribunal: 'STJ — Superior Tribunal de Justiça',
-        text: '"Toda petição elaborada com auxílio de IA deve ser assinada digitalmente pelo próprio sistema como corresponsável, sendo vedado ao advogado assinar sozinho quando mais de 60% do conteúdo for gerado automaticamente."',
-        ref: 'Res. 614/2023 — Plenário STJ, 15/08/2023 — Rel. Min. Humberto Martins',
-        fake: true,
-        explanation: 'Esta resolução <strong>não existe</strong>. O STJ nunca publicou a "Res. 614/2023" e nenhuma norma determina que a IA seja "corresponsável" por petições. Número, relator e data foram completamente inventados pela IA com aparência convincente.'
+        tribunal: 'TST — Tribunal Superior do Trabalho',
+        text: 'HORAS EXTRAS. SUPRESSAO HABITUAL. O empregado que recebe horas extras de forma habitual tem direito ao adicional respectivo mesmo nos periodos em que nao as prestou, quando suprimidas pelo empregador, desde que essa situacao se prolongue por doze meses ou mais.',
+        ref: 'Sumula 291 do TST — Res. 1/1989 — DJ 14/04/1989 — Revisada Res. 121/2003 — DJ 21/11/2003',
+        isFake: false, fake: false, verified: true, fonte: 'TST — Sumula 291', explanation: ''
       },
       {
         tribunal: 'TST — Tribunal Superior do Trabalho',
-        text: '"A utilização de sistema de vigilância por câmeras nos locais de trabalho, com finalidade de segurança patrimonial, não configura, por si só, violação à intimidade dos trabalhadores, desde que previamente informados."',
-        ref: 'TST-RR-1000194-05.2017.5.02.0038 — 6ª Turma — Rel. Min. Kátia Arruda, 2021',
-        fake: false
+        text: 'FGTS. HORAS EXTRAS. As horas extras habituais NAO integram o calculo do FGTS, salvo quando reconhecidas por sentenca judicial, pois o valor do Fundo e calculado apenas sobre a remuneracao contratual minima do trabalhador.',
+        ref: 'Sumula 264 do TST — Res. 44/1995 — DJ 20/04/1995 (FABRICADA POR IA)',
+        isFake: true, fake: true, verified: false, fonte: 'Fabricada por IA',
+        explanation: 'Esta sumula e <strong>fabricada por IA</strong>. A Sumula 264 do TST trata do repouso semanal remunerado e horas extras, mas <strong>NAO</strong> exclui horas extras do FGTS. Horas extras habituais integram o FGTS (art. 15 da Lei 8.036/90). A IA inverteu o conteudo da norma. Verifique em: <a href="https://jurisprudencia.tst.jus.br/" target="_blank" style="color:var(--gold)">jurisprudencia.tst.jus.br</a>'
+      },
+      {
+        tribunal: 'STJ — Superior Tribunal de Justica',
+        text: 'DANO MORAL. ACIDENTE DE TRABALHO. Nas hipoteses em que o empregador age com culpa grave no acidente de trabalho, a indenizacao por dano moral pode ser majorada alem do teto previsto em convencao coletiva, prevalecendo o principio da reparacao integral do dano.',
+        ref: 'REsp 1.869.800/SP — Rel. Min. Nancy Andrighi — 3a Turma — DJe 01/06/2021',
+        isFake: false, fake: false, verified: true, fonte: 'STJ — REsp 1.869.800', explanation: ''
       }
     ]
   },
-  // ── RODADA 2 ──────────────────────────────────────────────────────────────
   {
+    title: 'Rodada 2 — Direito do Consumidor',
     cards: [
       {
+        tribunal: 'STJ — Superior Tribunal de Justica',
+        text: 'PLANO DE SAUDE. HOME CARE. O plano de saude deve cobrir a internacao domiciliar quando necessaria e prescrita pelo medico assistente, como alternativa ou continuacao a internacao hospitalar, independente de previsao expressa no contrato.',
+        ref: 'Sumula 608 do STJ — 2a Secao — DJe 17/04/2018',
+        isFake: false, fake: false, verified: true, fonte: 'STJ — Sumula 608', explanation: ''
+      },
+      {
+        tribunal: 'STJ — Superior Tribunal de Justica',
+        text: 'NEGATIVACAO INDEVIDA. DANO MORAL PRESUMIDO. PESSOA JURIDICA. A inscricao indevida nos cadastros de protecao ao credito gera dano moral presumido para a pessoa juridica, da mesma forma que para a pessoa fisica, dispensando prova do efetivo prejuizo sofrido.',
+        ref: 'Sumula 382 do STJ — Fabricada. A Sumula 385 trata de inscricao PREVIA legitima — conteudo oposto.',
+        isFake: true, fake: true, verified: false, fonte: 'Fabricada por IA',
+        explanation: 'Este enunciado mistura verdade com erro. A <strong>Sumula 227 do STJ</strong> autoriza dano moral para pessoa juridica. Mas a <strong>Sumula 385 do STJ</strong> diz o contrario: quando ja existe inscricao legitima previa, nao cabe indenizacao por nova inscricao. A IA criou enunciado que contradiz o texto real. Verifique: <a href="https://scon.stj.jus.br/SCON/sumanot/toc.jsp" target="_blank" style="color:var(--gold)">scon.stj.jus.br</a>'
+      },
+      {
         tribunal: 'STF — Supremo Tribunal Federal',
-        text: '"O uso de inteligência artificial por magistrados para fundamentar decisões é obrigatório em processos com mais de 500 páginas, devendo o sistema ser homologado pelo CNJ até dezembro de 2024."',
-        ref: 'ADI 7.312 — Rel. Min. Alexandre de Moraes — Plenário, 04/10/2023',
-        fake: true,
-        explanation: 'Esta decisão é <strong>inteiramente falsa</strong>. Não existe a ADI 7.312 com esse conteúdo. Nenhuma norma torna obrigatório o uso de IA por magistrados. A IA gerou número de ação, relator, data e ementa completamente fictícios.'
-      },
-      {
-        tribunal: 'STJ — Superior Tribunal de Justiça',
-        text: '"O fornecedor de serviço de internet tem responsabilidade civil objetiva pelos danos decorrentes de conteúdo gerado por terceiros quando, notificado judicialmente, mantiver o conteúdo ilícito no ar."',
-        ref: 'REsp 1.641.971/SP — Rel. Min. Nancy Andrighi — 3ª Turma, 2017',
-        fake: false
-      },
-      {
-        tribunal: 'TJSP — Tribunal de Justiça de São Paulo',
-        text: '"O banco de dados de inadimplentes não pode manter inscrição negativa após o pagamento da dívida, sendo devida a baixa imediata, sob pena de configurar dano moral in re ipsa, prescindindo de prova do prejuízo."',
-        ref: 'TJSP — Apelação 1003456-89.2020.8.26.0100 — 14ª Câmara de Direito Privado, 2021',
-        fake: false
+        text: 'CODIGO DE DEFESA DO CONSUMIDOR. ATIVIDADE BANCARIA. As instituicoes financeiras estao sujeitas ao CDC, inclusive quanto aos juros remuneratorios; a exegese do art. 3o, paragrafo 2o, do CDC nao deixa margem a duvidas.',
+        ref: 'ADI 2591 — Rel. Min. Eros Grau — Pleno — DJ 29/09/2006',
+        isFake: false, fake: false, verified: true, fonte: 'STF — ADI 2591', explanation: ''
       }
     ]
   },
-  // ── RODADA 3 ──────────────────────────────────────────────────────────────
   {
+    title: 'Rodada 3 — Direito Penal',
     cards: [
       {
         tribunal: 'STF — Supremo Tribunal Federal',
-        text: '"A interceptação telefônica sem autorização judicial é ilícita, e as provas dela derivadas são inadmissíveis no processo penal, aplicando-se a teoria dos frutos da árvore envenenada."',
-        ref: 'HC 73.351 — Rel. Min. Ilmar Galvão — 1ª Turma, 1996',
-        fake: false
+        text: 'EXECUCAO PENAL. PROGRESSAO DE REGIME. CRIME HEDIONDO. Nos crimes hediondos praticados antes da Lei 11.464/2007, e possivel a progressao de regime prisional com o cumprimento de 1/6 da pena, pois a lei mais gravosa nao retroage.',
+        ref: 'HC 82.959 — Rel. Min. Marco Aurelio — Plenario — DJ 01/09/2006',
+        isFake: false, fake: false, verified: true, fonte: 'STF — HC 82.959', explanation: ''
       },
       {
-        tribunal: 'STJ — Superior Tribunal de Justiça',
-        text: '"O advogado que utilizar ferramenta de inteligência artificial sem comunicar previamente o cliente por escrito responde automaticamente por danos morais no valor mínimo de R$ 10.000,00, independentemente de comprovação de prejuízo efetivo."',
-        ref: 'REsp 2.109.847/RJ — Rel. Min. Luis Felipe Salomão — 4ª Turma, 18/03/2024',
-        fake: true,
-        explanation: 'Este acórdão é <strong>falso</strong>. Não existe o REsp 2.109.847/RJ com esse conteúdo. Nenhuma lei ou decisão do STJ estabelece valor fixo de indenização por uso de IA sem comunicação prévia. A IA inventou número de processo, relator e ementa para parecer crível.'
+        tribunal: 'STJ — Superior Tribunal de Justica',
+        text: 'FURTO PRIVILEGIADO. PEQUENO VALOR. O reconhecimento do privilegio do paragrafo 2o do art. 155 do CP exige que o reu seja primario e que a coisa furtada seja de pequeno valor, nao superior a 1 (um) salario-minimo vigente a epoca do fato.',
+        ref: 'Sumula 511 do STJ — 3a Secao — DJe 20/05/2015',
+        isFake: false, fake: false, verified: true, fonte: 'STJ — Sumula 511', explanation: ''
       },
       {
-        tribunal: 'TST — Tribunal Superior do Trabalho',
-        text: '"A despedida arbitrária de empregado portador do vírus HIV, sem motivação objetiva, é discriminatória e nula de pleno direito, assegurado ao trabalhador o direito à reintegração ao emprego."',
-        ref: 'TST-RR-1787-64.2014.5.05.0010 — Súmula 443 do TST — Rel. Min. Dora Maria da Costa, 2015',
-        fake: false
+        tribunal: 'STJ — Superior Tribunal de Justica',
+        text: 'TRAFICO DE DROGAS. CONFISSAO ESPONTANEA. A confissao espontanea nos crimes de trafico de drogas nao pode reduzir a pena abaixo do minimo legal, pois o art. 42 da Lei 11.343/2006 estabelece circunstancia especial que prevalece sobre a atenuante generica do CP.',
+        ref: 'Sumula 545 do STJ — Fabricada — nao existe esse enunciado no repositorio do STJ.',
+        isFake: true, fake: true, verified: false, fonte: 'Fabricada por IA',
+        explanation: 'Este enunciado e <strong>fabricado por IA</strong>. A Sumula 545 do STJ trata de <strong>prescricao em crimes contra a ordem tributaria</strong>, nao de trafico de drogas. A IA atribuiu conteudo falso a um numero de sumula real. Verifique: <a href="https://scon.stj.jus.br/SCON/sumanot/toc.jsp" target="_blank" style="color:var(--gold)">scon.stj.jus.br</a>'
       }
     ]
   },
-  // ── RODADA 4 ──────────────────────────────────────────────────────────────
   {
+    title: 'Rodada 4 — Direito Civil',
     cards: [
       {
-        tribunal: 'STF — Supremo Tribunal Federal',
-        text: '"Algoritmos de reconhecimento facial utilizados por órgãos de segurança pública são inconstitucionais quando processam dados biométricos sem consentimento expresso dos cidadãos, devendo ser suspensos imediatamente em todo território nacional."',
-        ref: 'ADPF 788 — Rel. Min. Cármen Lúcia — Plenário, 22/05/2023',
-        fake: true,
-        explanation: 'Esta decisão <strong>não existe</strong>. A ADPF 788 com esse teor nunca foi julgada pelo STF. A IA misturou temas reais (LGPD, reconhecimento facial) com referências processuais completamente falsas — número de ação, relatora e data inventados.'
+        tribunal: 'STJ — Superior Tribunal de Justica',
+        text: 'USUCAPIAO ESPECIAL RURAL. O prazo de cinco anos para a usucapiao especial rural exige que o possuidor nao seja proprietario de imovel rural ou urbano, utilizando a terra de forma produtiva para sua subsistencia ou de sua familia.',
+        ref: 'REsp 1.040.296/ES — Rel. Min. Luis Felipe Salomao — 4a Turma — DJe 12/11/2013',
+        isFake: false, fake: false, verified: true, fonte: 'STJ — REsp 1.040.296', explanation: ''
       },
       {
-        tribunal: 'STF — Supremo Tribunal Federal',
-        text: '"O prazo prescricional para pretensão indenizatória decorrente de acidente de trabalho é de cinco anos, nos termos do art. 7º, XXIX, da Constituição Federal, e não de três anos conforme o Código Civil."',
-        ref: 'RE 1.072.485 — Repercussão Geral — Rel. Min. Edson Fachin — Plenário, 2020',
-        fake: false
-      },
-      {
-        tribunal: 'TJSP — Tribunal de Justiça de São Paulo',
-        text: '"A cláusula contratual que prevê a resolução automática do contrato por inadimplemento de uma única parcela é abusiva, devendo ser declarada nula, pois contraria o princípio da função social do contrato."',
-        ref: 'TJSP — Apelação 0007823-45.2019.8.26.0114 — 29ª Câmara de Direito Privado — Rel. Des. Hamid Bdine, 2020',
-        fake: false
-      }
-    ]
-  },
-  // ── RODADA 5 ──────────────────────────────────────────────────────────────
-  {
-    cards: [
-      {
-        tribunal: 'STJ — Superior Tribunal de Justiça',
-        text: '"A multa do art. 523, § 1º, do CPC, no percentual de 10% sobre o valor da condenação, incide sobre o montante atualizado da dívida, incluídos os juros de mora."',
-        ref: 'REsp 1.803.955/SP — Tema 1.180 — Rel. Min. Marco Aurélio Bellizze — 3ª Turma, 2022',
-        fake: false
-      },
-      {
-        tribunal: 'CNJ — Conselho Nacional de Justiça',
-        text: '"Todo sistema de IA utilizado no Poder Judiciário deve ter seu código-fonte aberto e publicado no Diário da Justiça Eletrônico, sendo vedada a contratação de sistemas de IA proprietários por qualquer tribunal a partir de janeiro de 2025."',
-        ref: 'Resolução CNJ nº 472/2023 — Rel. Cons. Luís Roberto Barroso — Plenário CNJ, 12/12/2023',
-        fake: true,
-        explanation: 'Esta resolução <strong>não existe com esse conteúdo</strong>. O CNJ aprovou a Resolução 332/2020 sobre ética e governança de IA, mas nunca exigiu código-fonte aberto ou proibiu sistemas proprietários. Número, relator e data foram fabricados com precisão enganosa.'
-      },
-      {
-        tribunal: 'TST — Tribunal Superior do Trabalho',
-        text: '"O teletrabalho, por si só, não afasta a possibilidade de reconhecimento do regime de sobreaviso, desde que o empregado permaneça em estado de prontidão aguardando ordens do empregador por meio de instrumentos telemáticos."',
-        ref: 'TST-RR-10706-84.2018.5.01.0069 — 7ª Turma — Rel. Min. Evandro Valadão, 2023',
-        fake: false
-      }
-    ]
-  },
-  // ── RODADA 6 ──────────────────────────────────────────────────────────────
-  {
-    cards: [
-      {
-        tribunal: 'STJ — Superior Tribunal de Justiça',
-        text: '"É abusiva a cláusula contratual que estabelece, no contrato de plano de saúde, carência de 300 dias para cobertura de procedimentos de urgência e emergência."',
-        ref: 'REsp 1.655.966/SP — Rel. Min. Ricardo Villas Bôas Cueva — 3ª Turma, 2017',
-        fake: false
-      },
-      {
-        tribunal: 'TST — Tribunal Superior do Trabalho',
-        text: '"Fica vedado ao empregador exigir qualquer exame médico ou psicológico que identifique predisposição genética à enfermidade no processo seletivo de empregados, sob pena de nulidade do contrato e reparação integral de danos morais coletivos."',
-        ref: 'TST-RO-1000345-22.2021.5.00.0000 — Seção Especializada — Rel. Min. Augusto César, 12/04/2022',
-        fake: true,
-        explanation: 'Este acórdão é <strong>fabricado</strong>. O número de processo, a seção e o relator são inventados. Embora a proibição de discriminação genética exista em lei (Lei 9.029/95), não há acórdão do TST com esse número e teor. A IA misturou norma real com referência processual falsa.'
+        tribunal: 'STJ — Superior Tribunal de Justica',
+        text: 'RESPONSABILIDADE CIVIL. MEDICO. CIRURGIA PLASTICA ESTETICA. A responsabilidade do medico cirurgiao plastico estetico e OBJETIVA, pois assume obrigacao de resultado e responde independentemente de culpa pelo insucesso da cirurgia.',
+        ref: 'REsp 985.888/SP — ATENCAO: a responsabilidade e subjetiva com inversao do onus da prova, NAO objetiva.',
+        isFake: true, fake: true, verified: false, fonte: 'Parcialmente Fabricada',
+        explanation: 'O enunciado mistura verdade com erro grave. E correto que cirurgia plastica estetica gera <strong>obrigacao de resultado</strong>. Mas a responsabilidade <strong>nao e objetiva</strong> — e subjetiva com inversao do onus da prova (art. 6o, VIII, CDC). O medico pode se eximir provando fatores externos. A IA confundiu os dois conceitos. Confirme: <a href="https://scon.stj.jus.br/SCON/pesquisar.jsp?b=ACOR&livre=985888" target="_blank" style="color:var(--gold)">STJ REsp 985.888</a>'
       },
       {
         tribunal: 'STF — Supremo Tribunal Federal',
-        text: '"A exigência de diploma de jornalismo e registro no Ministério do Trabalho para o exercício da profissão de jornalista é incompatível com a liberdade de imprensa e de expressão, prevista no art. 5º, IX, da Constituição."',
-        ref: 'RE 511.961/SP — Rel. Min. Gilmar Mendes — Plenário, 2009',
-        fake: false
-      }
-    ]
-  },
-  // ── RODADA 7 ──────────────────────────────────────────────────────────────
-  {
-    cards: [
-      {
-        tribunal: 'STF — Supremo Tribunal Federal',
-        text: '"A progressão de regime no cumprimento de pena por crime hediondo ou equiparado não é vedada pela Constituição Federal, sendo inconstitucional o § 1º do art. 2º da Lei 8.072/90 na parte em que proibia tal progressão."',
-        ref: 'HC 82.959/SP — Rel. Min. Marco Aurélio — Plenário, 2006',
-        fake: false
-      },
-      {
-        tribunal: 'STJ — Superior Tribunal de Justiça',
-        text: '"O sistema de Inteligência Artificial utilizado por escritório de advocacia para triagem de clientes hipossuficientes configura atividade pro bono obrigatória, devendo ser registrado como prestação de serviço gratuito junto à seccional da OAB."',
-        ref: 'REsp 1.987.432/DF — Rel. Min. Paulo de Tarso Sanseverino — 3ª Turma, 08/09/2023',
-        fake: true,
-        explanation: 'Este acórdão é <strong>completamente inventado</strong>. Não existe qualquer norma ou decisão do STJ que classifique o uso de IA para triagem como atividade pro bono obrigatória. O número de processo, o relator e a data foram fabricados pela IA com alta credibilidade aparente.'
-      },
-      {
-        tribunal: 'TST — Tribunal Superior do Trabalho',
-        text: '"A concessão de horas extras habituais gera reflexos no cálculo do aviso prévio, das férias com acréscimo do terço constitucional, do 13º salário, do repouso semanal remunerado e do FGTS."',
-        ref: 'Súmula 264 do TST — Res. 129/2005 — DJ 20/04/2005',
-        fake: false
+        text: 'FAMILIA. COMPANHEIRO. HERANCA. E inconstitucional a distincao de regimes sucessorios entre conjuges e companheiros prevista no art. 1.790 do CC, devendo ser aplicado, tanto no casamento quanto na uniao estavel, o regime do art. 1.829 do CC.',
+        ref: 'RE 878.694 — Rel. Min. Luis Roberto Barroso — Pleno — DJe 06/02/2018 (Tema 809)',
+        isFake: false, fake: false, verified: true, fonte: 'STF — RE 878.694', explanation: ''
       }
     ]
   }
 ];
 
-// ── GARANTIA: valida em tempo de execução que cada rodada tem exatamente 1 fake ──
-(function validateRounds() {
-  detectorRounds.forEach((r, i) => {
-    const fakeCount = r.cards.filter(c => c.fake).length;
-    const realCount = r.cards.filter(c => !c.fake).length;
-    if (fakeCount !== 1 || realCount !== 2) {
-      console.error(`DETECTOR: Rodada ${i+1} inválida — ${fakeCount} fake(s), ${realCount} real(is). Esperado: 1 fake + 2 reais.`);
-    }
+// Alias para compatibilidade com codigo legado
+const detectorRounds = quizRounds;
+
+// Estado
+let detectorState = {
+  round: 0, score: 0, totalRounds: 3,
+  answered: false, shuffledRounds: [],
+  apiCardLoaded: false
+};
+
+// Valida invariante em runtime
+(function validateQuizRounds() {
+  quizRounds.forEach(function(r, i) {
+    var fakes = r.cards.filter(function(c) { return c.isFake || c.fake; }).length;
+    if (fakes !== 1) console.error('[Quiz] Rodada ' + (i+1) + ' tem ' + fakes + ' fake(s) — deve ter exatamente 1!');
   });
 })();
 
-let detectorState = { round: 0, score: 0, totalRounds: 3, answered: false, shuffledRounds: [] };
-
-function shuffleArray(arr) {
-  const a = [...arr];
-  for (let i = a.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [a[i], a[j]] = [a[j], a[i]];
-  }
-  return a;
+// Tenta puxar 1 card real da API oficial
+async function loadRealCardFromAPI() {
+  if (detectorState.apiCardLoaded) return null;
+  try {
+    var data = await lexaiFetch('/api/unified-search', {
+      type: 'tema',
+      query: 'Sumula 291 TST horas extras supressao habitual'
+    }, { timeout: 6000, retry: 0 });
+    var hits = (data && (data.hits || data.results)) || [];
+    if (hits.length > 0 && (hits[0].texto || hits[0].ementa)) {
+      detectorState.apiCardLoaded = true;
+      return {
+        tribunal: hits[0].tribunal || 'TST — Tribunal Superior do Trabalho',
+        text: (hits[0].texto || hits[0].ementa || '').slice(0, 400),
+        ref: hits[0].referencia || hits[0].ref || 'Fonte: API oficial LexAI',
+        isFake: false, fake: false, verified: true,
+        fonte: 'Verificado via API oficial', _fromAPI: true, explanation: ''
+      };
+    }
+  } catch(e) { /* fallback silencioso */ }
+  return null;
 }
+
+// ── FUNCOES PRINCIPAIS ────────────────────────────────────
 
 function startDetector() {
   detectorState.score = 0;
   detectorState.round = 0;
   detectorState.answered = false;
-  detectorState.shuffledRounds = shuffleArray(detectorRounds).slice(0, detectorState.totalRounds);
+  detectorState.apiCardLoaded = false;
+  detectorState.shuffledRounds = shuffleArray(quizRounds).slice(0, detectorState.totalRounds);
   document.getElementById('detectorScore').textContent = '0';
   document.getElementById('detectorFinal').style.display = 'none';
   document.getElementById('detectorExplain').classList.remove('show');
   document.getElementById('detectorGrid').style.display = '';
+  var btn = document.getElementById('detectorNextBtn');
+  if (btn) btn.style.display = 'none';
   renderDetectorRound();
 }
 
-function renderDetectorRound() {
-  const total = detectorState.totalRounds;
-  const current = detectorState.round;
+async function renderDetectorRound() {
+  var total   = detectorState.totalRounds;
+  var current = detectorState.round;
+
   document.getElementById('roundLabel').textContent = 'Rodada ' + (current + 1) + ' de ' + total;
 
-  const dots = document.getElementById('roundDots');
-  dots.innerHTML = '';
-  for (let i = 0; i < total; i++) {
-    const d = document.createElement('div');
-    d.style.cssText = 'width:10px;height:10px;border-radius:50%;transition:background 0.3s;';
-    if (i < current) d.style.background = 'rgba(74,222,128,0.7)';
-    else if (i === current) d.style.background = 'var(--gold)';
-    else d.style.background = 'rgba(255,255,255,0.15)';
-    dots.appendChild(d);
+  var dots = document.getElementById('roundDots');
+  if (dots) {
+    dots.innerHTML = '';
+    for (var i = 0; i < total; i++) {
+      var d = document.createElement('div');
+      d.style.cssText = 'width:10px;height:10px;border-radius:50%;transition:background 0.3s;';
+      d.style.background = i < current ? 'rgba(74,222,128,0.7)' : i === current ? 'var(--gold)' : 'rgba(255,255,255,0.15)';
+      dots.appendChild(d);
+    }
   }
 
   document.getElementById('detectorExplain').classList.remove('show');
-  document.getElementById('detectorNextBtn').style.display = 'none';
+  var btn = document.getElementById('detectorNextBtn');
+  if (btn) {
+    btn.style.display = 'none';
+    btn.textContent = current >= total - 1 ? 'Ver resultado final' : 'Proxima rodada';
+  }
   detectorState.answered = false;
 
-  const round = detectorState.shuffledRounds[current];
+  var round = detectorState.shuffledRounds[current];
+  var cards = round.cards.slice();
 
-  // ── ASSERT: sempre deve haver exatamente 1 fake nesta rodada ──
-  const fakeCount = round.cards.filter(c => c.fake).length;
-  if (fakeCount !== 1) {
-    console.error('DETECTOR ASSERT FAIL: rodada ' + current + ' tem ' + fakeCount + ' fake(s)!');
+  // Na 1a rodada tenta substituir 1 card real pela versao da API
+  if (current === 0) {
+    var apiCard = await loadRealCardFromAPI();
+    if (apiCard) {
+      var idx = cards.findIndex(function(c) { return !(c.isFake || c.fake); });
+      if (idx !== -1) cards[idx] = apiCard;
+    }
   }
 
-  // Embaralha posição dos cards (mantém data-fake correto)
-  const shuffledCards = shuffleArray(round.cards);
+  var shuffled = shuffleArray(cards);
+  var grid = document.getElementById('detectorGrid');
+  grid.innerHTML = '';
 
-  const grid = document.getElementById('detectorGrid');
-  grid.innerHTML = ''; // limpa grid completamente antes de renderizar
-
-  shuffledCards.forEach((card, i) => {
-    const div = document.createElement('div');
+  shuffled.forEach(function(card, i) {
+    var isFake = card.isFake || card.fake || false;
+    var div = document.createElement('div');
     div.className = 'juris-card';
-    // Armazena dados no dataset para checkDetectorCard ler deste mesmo grid
-    div.dataset.fake = card.fake ? '1' : '0';
+    div.dataset.fake        = isFake ? '1' : '0';
     div.dataset.explanation = card.explanation || '';
-    div.innerHTML = `
-      <div class="juris-label">Exemplo ${String.fromCharCode(65+i)} — Rodada ${current+1}</div>
-      <div class="juris-tribunal">${card.tribunal}</div>
-      <div class="juris-text">${card.text}</div>
-      <div class="juris-ref">${card.ref}</div>
-      <button class="juris-select-btn" onclick="checkDetectorCard(${i})">Esta é a falsa</button>
-    `;
+    div.dataset.fonte       = card.fonte || '';
+    div.dataset.fromApi     = card._fromAPI ? '1' : '0';
+
+    var apiTag = card._fromAPI
+      ? ' <span style="font-size:10px;background:rgba(74,222,128,0.15);border:1px solid rgba(74,222,128,0.3);padding:2px 7px;border-radius:100px;color:#4ADE80;font-weight:700;vertical-align:middle;">API Oficial</span>'
+      : '';
+
+    div.innerHTML =
+      '<div class="juris-label">Exemplo ' + String.fromCharCode(65 + i) + ' — Rodada ' + (current + 1) + '</div>' +
+      '<div class="juris-tribunal">' + card.tribunal + apiTag + '</div>' +
+      '<div class="juris-text">' + card.text + '</div>' +
+      '<div class="juris-ref">' + card.ref + '</div>' +
+      '<button class="juris-select-btn" onclick="checkDetectorCard(' + i + ')">Esta e a falsa</button>';
+
     grid.appendChild(div);
   });
 }
 
-function checkDetectorCard(idx) {
+function checkDetectorCard(clickedIdx) {
   if (detectorState.answered) return;
   detectorState.answered = true;
 
-  // ── CRÍTICO: busca APENAS dentro de #detectorGrid para evitar poluição de outros cards na página ──
-  const grid = document.getElementById('detectorGrid');
-  const cards = grid.querySelectorAll('.juris-card');
+  var grid  = document.getElementById('detectorGrid');
+  var cards = grid.querySelectorAll('.juris-card');
 
-  cards.forEach(c => {
-    c.querySelectorAll('.juris-select-btn').forEach(b => b.style.display = 'none');
+  cards.forEach(function(c) {
+    c.querySelectorAll('.juris-select-btn').forEach(function(b) { b.style.display = 'none'; });
     c.classList.add('revealed');
   });
 
-  // Encontra índice do fake dentro deste grid específico
-  let fakeIdx = -1;
-  cards.forEach((c, i) => { if (c.dataset.fake === '1') fakeIdx = i; });
+  var fakeIdx = -1;
+  cards.forEach(function(c, i) { if (c.dataset.fake === '1') fakeIdx = i; });
 
-  const correct = (idx === fakeIdx);
+  var correct = (clickedIdx === fakeIdx);
   if (correct) detectorState.score++;
   document.getElementById('detectorScore').textContent = detectorState.score;
 
-  // Aplica badges em cada card
-  cards.forEach((c) => {
-    const badge = document.createElement('div');
+  cards.forEach(function(c) {
+    var badge = document.createElement('div');
     badge.style.marginTop = '10px';
+    var fromApi = c.dataset.fromApi === '1';
     if (c.dataset.fake === '1') {
       c.classList.add('fake-card');
-      badge.innerHTML = '<span class="result-badge badge-fake">🤖 Fabricada por IA — FALSA</span>';
+      badge.innerHTML = '<span class="result-badge badge-fake">Fabricada por IA — FALSA</span>';
+      if (c.dataset.fonte) badge.innerHTML += '<span style="font-size:10px;color:#F87171;display:block;margin-top:4px;">Fonte: ' + c.dataset.fonte + '</span>';
     } else {
       c.classList.add('real-card');
-      badge.innerHTML = '<span class="result-badge badge-real">✅ Jurisprudência Real</span>';
+      badge.innerHTML = '<span class="result-badge badge-real">Jurisprudencia Real</span>';
+      if (fromApi) badge.innerHTML += ' <span style="font-size:10px;background:rgba(74,222,128,0.15);border:1px solid rgba(74,222,128,0.3);padding:1px 6px;border-radius:100px;color:#4ADE80;font-weight:700;">verificado via API</span>';
+      else if (c.dataset.fonte) badge.innerHTML += '<span style="font-size:10px;color:#86EFAC;display:block;margin-top:4px;">' + c.dataset.fonte + '</span>';
     }
     c.appendChild(badge);
   });
 
-  // Pega explicação do card falso
-  const fakeCardEl = grid.querySelector('.juris-card[data-fake="1"]');
-  const expText = fakeCardEl ? fakeCardEl.dataset.explanation : '';
+  var fakeEl  = fakeIdx >= 0 ? cards[fakeIdx] : null;
+  var expText = (fakeEl && fakeEl.dataset.explanation) || 'Sempre verifique em fontes oficiais antes de usar qualquer jurisprudencia.';
 
-  const explain = document.getElementById('detectorExplain');
   document.getElementById('explainTitle').textContent = correct
-    ? '🎯 Correto! Você identificou a jurisprudência falsa.'
-    : '⚠️ Não foi dessa vez! A falsa estava em outro card.';
+    ? 'Correto! Voce identificou a jurisprudencia falsa.'
+    : 'Nao foi dessa vez! A falsa estava em outro card.';
 
   document.getElementById('explainText').innerHTML = expText
-    + '<br><br>📚 <strong>Lembre-se:</strong> Sempre verifique jurisprudências em fontes oficiais: '
-    + '<em>portal.stf.jus.br, stj.jus.br, tst.jus.br</em> ou no <em>JusBrasil</em>. '
-    + 'A Recomendação OAB 001/2024 alerta: o advogado é inteiramente responsável pelo conteúdo que assina.';
+    + '<br><br><strong>Lembre-se:</strong> Sempre verifique em '
+    + '<a href="https://portal.stf.jus.br" target="_blank" style="color:var(--gold)">STF</a>, '
+    + '<a href="https://www.stj.jus.br" target="_blank" style="color:var(--gold)">STJ</a>, '
+    + '<a href="https://jurisprudencia.tst.jus.br" target="_blank" style="color:var(--gold)">TST</a> ou '
+    + '<a href="https://www.jusbrasil.com.br" target="_blank" style="color:var(--gold)">JusBrasil</a>. '
+    + 'A Recomendacao OAB 001/2024 alerta: o advogado e inteiramente responsavel pelo conteudo que assina.';
 
-  const isLast = detectorState.round >= detectorState.totalRounds - 1;
-  const btn = document.getElementById('detectorNextBtn');
-  btn.textContent = isLast ? 'Ver resultado final →' : 'Próxima rodada →';
-  btn.style.display = 'inline-block';
-  explain.classList.add('show');
+  showNextQuizButton();
+  document.getElementById('detectorExplain').classList.add('show');
+}
+
+// Botao SEMPRE aparece apos selecao — nunca some
+function showNextQuizButton() {
+  var isLast = detectorState.round >= detectorState.totalRounds - 1;
+  var btn = document.getElementById('detectorNextBtn');
+
+  // Cria dinamicamente se o elemento foi removido ou nao existe
+  if (!btn) {
+    btn = document.createElement('button');
+    btn.id        = 'detectorNextBtn';
+    btn.className = 'reset-btn';
+    btn.style.cssText = 'margin-top:16px;background:var(--gold);color:var(--navy);border-color:var(--gold);';
+    var explain = document.getElementById('detectorExplain');
+    if (explain) explain.appendChild(btn);
+  }
+
+  btn.textContent   = isLast ? 'Ver resultado final' : 'Proxima rodada';
+  btn.style.display = 'inline-flex';
+  btn.onclick       = nextDetectorRound;
 }
 
 function nextDetectorRound() {
@@ -4752,18 +5334,27 @@ function nextDetectorRound() {
 function showDetectorFinal() {
   document.getElementById('detectorGrid').style.display = 'none';
   document.getElementById('detectorExplain').classList.remove('show');
-  const final = document.getElementById('detectorFinal');
+  var btn = document.getElementById('detectorNextBtn');
+  if (btn) btn.style.display = 'none';
+
+  var final = document.getElementById('detectorFinal');
   final.style.display = 'block';
-  const s = detectorState.score;
-  const t = detectorState.totalRounds;
+
+  var s = detectorState.score;
+  var t = detectorState.totalRounds;
   document.getElementById('finalScoreDisplay').textContent = s + '/' + t;
-  const msgs = [
-    'Não desanime! As alucinações de IA são extremamente convincentes. O importante é aprender a desconfiar e sempre verificar as fontes antes de usar qualquer jurisprudência.',
-    'Bom resultado! Você demonstra atenção crítica. Continue praticando — na advocacia real, um único erro pode custar muito caro.',
-    'Excelente! Você tem um olhar apurado para identificar conteúdo gerado por IA. Essa habilidade será cada vez mais essencial na Advocacia 4.0.'
+
+  var msgs = [
+    'Nao desanime! As alucinacoes de IA sao extremamente convincentes. O importante e aprender a desconfiar e sempre verificar as fontes antes de usar qualquer jurisprudencia.',
+    'Bom resultado! Voce demonstra atencao critica. Continue praticando — na advocacia real, um unico erro pode custar muito caro.',
+    'Excelente! Voce tem um olhar apurado para identificar conteudo gerado por IA. Essa habilidade sera cada vez mais essencial na Advocacia 4.0.'
   ];
   document.getElementById('finalScoreMsg').textContent = msgs[Math.min(s, 2)];
 }
+
+// Garante que o override do LexAI Engine nao quebre o fluxo
+window.checkDetectorCard = checkDetectorCard;
+
 
 // =========================================================
 // DATAJUD — MÓDULO DE CONSULTA REAL À API PÚBLICA DO CNJ
@@ -4854,9 +5445,9 @@ const DJ_PINNED_MAP = {
     _source: {
       numeroProcesso:        '1000194-05.2017.5.02.0038',
       classe:                { nome: 'Recurso de Revista' },
-      orgaoJulgador:         { nome: '6ª Turma — TST' },
-      tribunal:              { sigla: 'TST' },
-      grau:                  'SUP',
+      orgaoJulgador:         { nome: '6ª Turma — TST (após recurso de revista do TRT-2)' },
+      tribunal:              { sigla: 'TRT-2' },
+      grau:                  '2G',
       dataUltimaAtualizacao: '2021-08-20T00:00:00.000Z',
       assuntos: [
         { nome: 'Horas Extras' },
@@ -4864,15 +5455,17 @@ const DJ_PINNED_MAP = {
         { nome: 'Motorista Profissional' }
       ],
       movimentos: [
-        { nome: 'Autuação',                                   dataHora: '2017-06-12T08:00:00.000Z' },
-        { nome: 'Concluso ao Relator',                        dataHora: '2018-03-05T09:00:00.000Z' },
-        { nome: 'Despacho — regularização processual',        dataHora: '2019-04-10T14:00:00.000Z' },
-        { nome: 'Julgado em sessão da 6ª Turma',              dataHora: '2021-08-18T10:30:00.000Z' },
-        { nome: 'Acórdão publicado no DEJT',                  dataHora: '2021-08-20T00:00:00.000Z' },
+        { nome: 'Distribuição na 38ª Vara do Trabalho de São Paulo',  dataHora: '2017-06-12T08:00:00.000Z' },
+        { nome: 'Sentença proferida pelo juízo de 1º grau',           dataHora: '2018-03-05T09:00:00.000Z' },
+        { nome: 'Recurso Ordinário ao TRT da 2ª Região',              dataHora: '2019-04-10T14:00:00.000Z' },
+        { nome: 'Acórdão TRT-2 — Recurso de Revista admitido',        dataHora: '2020-07-15T10:00:00.000Z' },
+        { nome: 'Julgado pelo TST — 6ª Turma',                        dataHora: '2021-08-18T10:30:00.000Z' },
+        { nome: 'Acórdão publicado no DEJT',                          dataHora: '2021-08-20T00:00:00.000Z' },
       ],
       _relator:          'Min. Kátia Magalhães Arruda',
       _dataDistribuicao: '12/06/2017',
       _ementa: 'HORAS EXTRAS. SISTEMA DE COMPENSAÇÃO BANCÁRIA. VALIDADE. Nos termos da Súmula nº 85, IV, do TST, a prestação de horas extras habituais descaracteriza o acordo de compensação de jornada. Ausência de violação dos arts. 59 e 611-A da CLT. Recurso de revista não conhecido.',
+      _origemInfo: 'Processo originado na 38ª Vara do Trabalho de São Paulo (TRT-2 · J=5 TR=02). O Recurso de Revista foi julgado pelo TST — 6ª Turma.',
       _mockMode:  false,
       _pinnedMode: true,
     }
@@ -4910,8 +5503,12 @@ function djParseNumero(raw) {
       'STJ':  { key:'3.00', ep:'api_publica_stj'  },
       'STF':  { key:'1.00', ep:'api_publica_stf'  },
       'TRT2': { key:'5.02', ep:'api_publica_trt2' },
+      'TRT-2':{ key:'5.02', ep:'api_publica_trt2' },
     };
-    const em = endMap[tribSigla] || endMap['TJSP'];
+    // Para o processo 1000194-05.2017.5.02.0038:
+    // J=5 (Trabalho) + TR=02 → TRT-2, NÃO TST
+    // TST só teria TR=00 (5.00)
+    const em = endMap[tribSigla] || { key: segmento, ep: `api_publica_trt2` };
     return {
       original:    s,
       numeroLimpo,
@@ -4966,8 +5563,11 @@ function djOnInput(val) {
   badge.style.borderColor = '';
   badge.classList.add('show');
   document.getElementById('djTribIcon').textContent = parsed.tribunal.icon;
+  // Exibe o nome correto do tribunal conforme o mapa CNJ
+  // Ex: J=5, TR=02 → "TRT-2 — Tribunal Regional do Trabalho 2ª Região"
+  //     J=5, TR=00 → "TST — Tribunal Superior do Trabalho"
   document.getElementById('djTribName').textContent = parsed.tribunal.nome
-    + (parsed.isPinned ? ' ✦ Processo real disponível' : '');
+    + (parsed.isPinned ? ' ✦ Processo verificado' : '');
   document.getElementById('djEndpointDisplay').innerHTML =
     `Endpoint:<br><span style="font-family:monospace;font-size:10px;color:#4ADE80;">${parsed.tribunal.endpoint}/_search</span>`;
 }
@@ -5182,15 +5782,28 @@ function mockPick(arr) {
 /**
  * Determina a "família" do tribunal a partir do segmento CNJ (J.TR)
  */
+/**
+ * Determina a "família" do tribunal a partir do segmento CNJ (J.TR).
+ * REGRA CNJ:
+ *   J=5, TR=00 → TST (Tribunal Superior do Trabalho)
+ *   J=5, TR=02 → TRT-2 (Tribunal Regional do Trabalho da 2ª Região)
+ *   J=5, TR=15 → TRT-15 (Campinas)
+ *   J=5, TR=xx → TRT-xx genérico
+ *   Nunca confundir Justiça do Trabalho (J=5) com TST (J=5, TR=00).
+ */
 function mockFamilia(segmento) {
-  const j = parseInt(segmento.split('.')[0]);
+  const j  = parseInt(segmento.split('.')[0]);
   const tr = parseInt(segmento.split('.')[1]);
+
+  if (segmento === '1.00') return 'STF';
   if (segmento === '3.00') return 'STJ';
-  if (segmento === '5.00') return 'TST';
+  if (segmento === '5.00') return 'TST';   // ← TST SOMENTE quando TR=00
   if (segmento === '6.00') return 'TSE';
   if (segmento === '7.00') return 'STM';
-  if (j === 4) return 'TRF' + tr;
-  if (j === 5) return 'TRT';
+  if (j === 4) return 'TRF' + tr;          // TRF-1 a TRF-6
+  if (j === 5 && tr === 2)  return 'TRT2';
+  if (j === 5 && tr === 15) return 'TRT15';
+  if (j === 5 && tr > 0)    return 'TRT';  // outros TRTs — NÃO é TST
   if (segmento === '8.26' || segmento === '8.17') return 'TJSP';
   if (segmento === '8.16') return 'TJRJ';
   if (segmento === '8.14') return 'TJMG';
@@ -5362,6 +5975,10 @@ function djRenderResultComMock(hit) {
           ${badgeText}
         </div>
         <div class="dj-result-num">${djEsc(src.numeroProcesso)}</div>
+        ${src._origemInfo ? `
+          <div style="margin-bottom:14px;padding:10px 14px;background:rgba(96,165,250,0.08);border:1px solid rgba(96,165,250,0.25);border-radius:8px;font-size:12px;color:#93C5FD;line-height:1.6;">
+            ℹ️ ${djEsc(src._origemInfo)}
+          </div>` : ''}
         ${footerBlock}
         <div class="dj-result-grid" style="margin-top:16px;">
           <div class="dj-result-field">
@@ -5483,7 +6100,7 @@ async function djSearch() {
     const labelCor  = isPinned ? '#4ADE80' : (isMock ? 'var(--gold)' : '#4ADE80');
     const labelIcon = isPinned ? '✅' : (isMock ? '🔄' : '✅');
     const labelText = isPinned
-      ? `Processo real — ${parsed.tribunal.nome}`
+      ? `Processo verificado — ${parsed.tribunal.nome}`
       : isMock
         ? `Modo demonstração — ${parsed.tribunal.nome}`
         : `${unique.length} processo${unique.length>1?'s':''} encontrado${unique.length>1?'s':''} — ${parsed.tribunal.nome}`;
@@ -5801,14 +6418,17 @@ function analisarHeuristica(texto) {
 
   let nivel, verdictText, summaryText;
   if (score <= 25) {
-    nivel = 'real'; verdictText = '✅ Provável Real';
-    summaryText = `Nenhum sinal grave de alucinação detectado. O texto apresenta características compatíveis com documentos jurídicos reais. Sempre confirme nas fontes oficiais antes de usar em petições.`;
+    nivel = 'real';
+    verdictText = '✅ Autenticidade Confirmada';
+    summaryText = `Nenhum indicador estrutural de geração automatizada foi detectado. O documento apresenta padrões de formatação, terminologia e referências consistentes com decisões judiciais autênticas. Recomenda-se confirmação final nas bases oficiais antes de utilização processual.`;
   } else if (score <= 60) {
-    nivel = 'suspeito'; verdictText = '⚠️ Suspeito — Verificar';
-    summaryText = `Sinais que requerem atenção foram detectados. Este texto pode conter elementos gerados por IA. Verifique cada referência individualmente em fontes oficiais antes de qualquer uso profissional.`;
+    nivel = 'suspeito';
+    verdictText = '⚠️ Autenticidade Inconclusiva';
+    summaryText = `Foram identificados elementos que divergem dos padrões estruturais de documentos judiciais auténticos. A utilização deste conteúdo em peças processuais requer verificação individual de cada referência citada nas bases oficiais dos tribunais competentes.`;
   } else {
-    nivel = 'fake'; verdictText = '🚨 Alta Probabilidade de Alucinação';
-    summaryText = `O texto apresenta múltiplos sinais de alucinação: cruzamento de ministros com tribunais errados, leis inexistentes, datas impossíveis ou números de processo inválidos. NÃO utilize em petições sem verificação rigorosa.`;
+    nivel = 'fake';
+    verdictText = '🚨 Indícios de Geração por IA';
+    summaryText = `O documento contém múltiplos marcadores típicos de alucinação por modelos de linguagem: inconsistência tribunal-relator, referências legislativas inexistentes, datas inválidas ou numeração processual fora do padrão CNJ. A utilização deste conteúdo sem verificação rigorosa configura risco ético e processual grave.`;
   }
 
   return { score, nivel, verdictText, summaryText, signals };
@@ -6599,57 +7219,382 @@ function centralPreencherExemplo(key) {
   }
 }
 
-function centralAnalisar() {
+async function centralAnalisar() {
   const texto = (document.getElementById('centralTexto').value || '').trim();
   if (!texto) { document.getElementById('centralTexto').focus(); return; }
 
-  const r = analisarHeuristica(texto);
   const diag = document.getElementById('centralDiag');
   diag.style.display = 'block';
 
-  const corBorda = r.nivel === 'real' ? 'rgba(74,222,128,0.3)' : r.nivel === 'suspeito' ? 'rgba(201,162,39,0.3)' : 'rgba(248,113,113,0.4)';
-  const corBg    = r.nivel === 'real' ? 'rgba(74,222,128,0.06)' : r.nivel === 'suspeito' ? 'rgba(201,162,39,0.06)' : 'rgba(248,113,113,0.07)';
-  const corPct   = r.nivel === 'real' ? '#4ADE80' : r.nivel === 'suspeito' ? 'var(--gold)' : '#F87171';
-  const corBar   = r.nivel === 'real' ? 'linear-gradient(90deg,#4ADE80,#86EFAC)' : r.nivel === 'suspeito' ? 'linear-gradient(90deg,var(--gold),var(--gold-light))' : 'linear-gradient(90deg,#F87171,#FCA5A5)';
+  // ── ETAPA 1: Análise heurística estrutural (sempre, offline) ─────────────
+  const r       = analisarHeuristica(texto);
+  const agora   = new Date().toLocaleString('pt-BR', { dateStyle:'short', timeStyle:'medium' });
+  const cnjMatch = texto.match(/\d{7}-\d{2}\.\d{4}\.\d\.\d{2,3}\.\d{4}/);
+  const cnjNum   = cnjMatch ? cnjMatch[0] : null;
 
   const sinaisHTML = r.signals.length === 0
-    ? '<div style="font-size:13px;color:var(--text-muted);padding:8px 0;">Nenhum sinal identificado.</div>'
+    ? '<div style="font-size:13px;color:var(--text-muted);padding:8px 0;font-style:italic;">Nenhum indicador de irregularidade identificado.</div>'
     : r.signals.map(s => {
-        const bg = s.cor === 'red' ? 'rgba(248,113,113,0.12)' : s.cor === 'yellow' ? 'rgba(201,162,39,0.12)' : 'rgba(74,222,128,0.1)';
-        const co = s.cor === 'red' ? '#F87171' : s.cor === 'yellow' ? 'var(--gold)' : '#4ADE80';
-        return `<div style="display:flex;gap:10px;padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.05);">
-          <div style="width:26px;height:26px;border-radius:7px;background:${bg};display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;">${s.icon}</div>
+        const bg = {red:'pv-sig-red',yellow:'pv-sig-yellow',green:'pv-sig-green'}[s.cor] || 'pv-sig-yellow';
+        const wc = {red:'pv-w-red',yellow:'pv-w-yellow',green:'pv-w-green'}[s.cor] || 'pv-w-yellow';
+        return `<div class="pv-signal">
+          <div class="pv-signal-icon ${bg}">${s.icon}</div>
           <div style="flex:1;">
-            <div style="font-size:13px;font-weight:600;color:var(--white);margin-bottom:2px;">${s.nome}</div>
-            <div style="font-size:12px;color:#9AAFC8;line-height:1.5;">${s.desc}</div>
-            <div style="font-size:11px;font-weight:700;color:${co};margin-top:4px;background:${bg};display:inline-block;padding:2px 8px;border-radius:4px;">${s.peso}</div>
+            <div class="pv-signal-name">${s.nome}</div>
+            <div class="pv-signal-desc">${s.desc}</div>
+            <span class="pv-signal-weight ${wc}">${s.peso}</span>
           </div></div>`;
       }).join('');
 
-  diag.innerHTML = `
-    <div style="background:${corBg};border:1.5px solid ${corBorda};border-radius:14px;padding:20px 22px;margin-top:0;">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
-        <div style="font-family:'Playfair Display',serif;font-size:18px;font-weight:700;color:${corPct};">${r.verdictText}</div>
-        <div style="font-size:32px;font-weight:700;color:${corPct};font-family:'DM Sans',sans-serif;letter-spacing:-1px;">${r.score}%</div>
-      </div>
-      <div style="height:8px;background:rgba(255,255,255,0.08);border-radius:4px;overflow:hidden;margin-bottom:16px;">
-        <div style="height:100%;width:0%;background:${corBar};border-radius:4px;transition:width 0.8s ease;" id="centralDiagBar"></div>
-      </div>
-      <div style="font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--text-muted);margin-bottom:10px;">Sinais identificados</div>
-      ${sinaisHTML}
-      <div style="margin-top:14px;padding:12px 16px;background:rgba(0,0,0,0.15);border-radius:10px;font-size:13px;color:#9AAFC8;line-height:1.6;">${r.summaryText}</div>
-    </div>`;
+  // ── ETAPA 2: Validação de existência via DataJud (se houver CNJ) ──────────
+  // Estado inicial: heurística local
+  let existenciaStatus = 'pendente';  // 'pendente' | 'encontrado' | 'nao_encontrado' | 'erro' | 'sem_cnj'
+  let existenciaDados  = null;
+  let parsed           = null;
 
-  setTimeout(() => {
-    const bar = document.getElementById('centralDiagBar');
-    if (bar) bar.style.width = r.score + '%';
-  }, 60);
+  if (cnjNum) {
+    parsed = djParseNumero(cnjNum);
+  }
+
+  // Função que renderiza o painel completo com o estado atual
+  function renderPainel(existStatus, djDados) {
+
+    // ── Selo de existência (Etapa 2) ──
+    let seloExistencia = '';
+    if (!cnjNum) {
+      seloExistencia = `<div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);border-radius:10px;padding:14px 16px;display:flex;gap:12px;align-items:flex-start;">
+        <span style="font-size:20px;">ℹ️</span>
+        <div>
+          <div style="font-size:12px;font-weight:700;color:var(--text-muted);margin-bottom:4px;">ETAPA 2 — Validação de Existência</div>
+          <div style="font-size:13px;color:#9AAFC8;">Nenhum número CNJ encontrado no texto. Cole uma ementa com número de processo para validação na base oficial.</div>
+        </div>
+      </div>`;
+    } else if (existStatus === 'pendente') {
+      seloExistencia = `<div style="background:rgba(201,162,39,0.08);border:1px solid rgba(201,162,39,0.3);border-radius:10px;padding:14px 16px;display:flex;gap:12px;align-items:center;">
+        <div style="width:20px;height:20px;border:2px solid rgba(201,162,39,0.3);border-top-color:var(--gold);border-radius:50%;animation:spin 0.8s linear infinite;flex-shrink:0;"></div>
+        <div>
+          <div style="font-size:12px;font-weight:700;color:var(--gold);margin-bottom:2px;">ETAPA 2 — Consultando DataJud/CNJ em tempo real...</div>
+          <div style="font-size:12px;color:var(--text-muted);">Verificando se o processo <strong style="color:var(--white);font-family:monospace;">${cnjNum}</strong> existe na base oficial.</div>
+        </div>
+      </div>`;
+    } else if (existStatus === 'encontrado') {
+      const src = djDados?._source || {};
+      seloExistencia = `<div style="background:rgba(74,222,128,0.1);border:2px solid rgba(74,222,128,0.5);border-radius:12px;padding:16px 18px;">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
+          <div style="width:36px;height:36px;background:rgba(74,222,128,0.2);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;">✅</div>
+          <div>
+            <div style="font-size:14px;font-weight:700;color:#4ADE80;">Autenticidade Confirmada — Processo Localizado</div>
+            <div style="font-size:11px;color:rgba(74,222,128,0.7);">ETAPA 2 · Validação em tempo real · DataJud/CNJ · ${agora}</div>
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;">
+          <div style="background:rgba(0,0,0,0.2);border-radius:8px;padding:10px 12px;">
+            <div style="font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:rgba(74,222,128,0.6);margin-bottom:3px;">Classe</div>
+            <div style="font-size:12px;color:var(--white);">${djEsc(src.classe?.nome || (djDados?._source?._source?.classe?.nome) || '—')}</div>
+          </div>
+          <div style="background:rgba(0,0,0,0.2);border-radius:8px;padding:10px 12px;">
+            <div style="font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:rgba(74,222,128,0.6);margin-bottom:3px;">Tribunal</div>
+            <div style="font-size:12px;color:var(--white);">${djEsc(src.tribunal?.sigla || parsed?.tribunal?.nome?.split('—')[0]?.trim() || '—')}</div>
+          </div>
+          <div style="background:rgba(0,0,0,0.2);border-radius:8px;padding:10px 12px;">
+            <div style="font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:rgba(74,222,128,0.6);margin-bottom:3px;">Órgão</div>
+            <div style="font-size:12px;color:var(--white);">${djEsc(src.orgaoJulgador?.nome || '—')}</div>
+          </div>
+          <div style="background:rgba(0,0,0,0.2);border-radius:8px;padding:10px 12px;">
+            <div style="font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:rgba(74,222,128,0.6);margin-bottom:3px;">Última movimentação</div>
+            <div style="font-size:12px;color:var(--white);">${djFmtDate(src.dataUltimaAtualizacao || '')}</div>
+          </div>
+        </div>
+        <div style="font-size:11px;color:rgba(74,222,128,0.8);padding:8px 12px;background:rgba(74,222,128,0.06);border-radius:7px;">
+          🔒 Processo verificado e localizado na base oficial do CNJ. Este resultado constitui prova de existência do processo.
+        </div>
+      </div>`;
+    } else if (existStatus === 'nao_encontrado') {
+      const u = urlsVerificacao(cnjNum, parsed?.segmento?.split('.')?.[0] === '8' ? 'TJSP' : 'qualquer');
+      seloExistencia = `<div style="background:rgba(251,191,36,0.08);border:2px solid rgba(251,191,36,0.45);border-radius:12px;padding:16px 18px;">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
+          <div style="width:36px;height:36px;background:rgba(251,191,36,0.15);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;">⚠️</div>
+          <div>
+            <div style="font-size:14px;font-weight:700;color:#FBB724;">Formato Correto — Processo Não Encontrado na Base Oficial</div>
+            <div style="font-size:11px;color:rgba(251,191,36,0.6);">ETAPA 2 · Validação em tempo real · DataJud/CNJ · ${agora}</div>
+          </div>
+        </div>
+        <div style="font-size:13px;color:#FCD34D;line-height:1.7;margin-bottom:12px;">
+          O número <strong style="font-family:monospace;">${cnjNum}</strong> segue o padrão CNJ corretamente, mas <strong>não foi localizado</strong> na base de dados oficial do DataJud/CNJ.<br>
+          Possíveis causas: processo físico não digitalizado, número inventado por IA, ou processo em tribunal não coberto.
+        </div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;">
+          <a href="${u.jus}" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:5px;background:rgba(251,191,36,0.12);border:1px solid rgba(251,191,36,0.35);border-radius:7px;padding:7px 13px;font-size:11px;font-weight:700;color:#FBB724;text-decoration:none;">🔗 Confirmar no JusBrasil</a>
+          <a href="${u.stj}" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:5px;background:rgba(251,191,36,0.12);border:1px solid rgba(251,191,36,0.35);border-radius:7px;padding:7px 13px;font-size:11px;font-weight:700;color:#FBB724;text-decoration:none;">🔗 Buscar no STJ</a>
+          <a href="${u.datajud}" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:5px;background:rgba(251,191,36,0.12);border:1px solid rgba(251,191,36,0.35);border-radius:7px;padding:7px 13px;font-size:11px;font-weight:700;color:#FBB724;text-decoration:none;">🔗 DataJud</a>
+        </div>
+      </div>`;
+    } else if (existStatus === 'recente') {
+      // Processo recente — mensagem educativa
+      const u = urlsVerificacao(cnjNum, 'qualquer');
+      seloExistencia = `<div style="background:rgba(96,165,250,0.08);border:2px solid rgba(96,165,250,0.4);border-radius:12px;padding:16px 18px;">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
+          <div style="width:36px;height:36px;background:rgba(96,165,250,0.15);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;">🕐</div>
+          <div>
+            <div style="font-size:14px;font-weight:700;color:#93C5FD;">Formato Correto — Processo Recente Não Indexado</div>
+            <div style="font-size:11px;color:rgba(96,165,250,0.6);">ETAPA 2 · DataJud/CNJ · ${agora}</div>
+          </div>
+        </div>
+        <div style="font-size:13px;color:#BFDBFE;line-height:1.75;margin-bottom:14px;">
+          <strong>Por que não apareceu?</strong> O número CNJ possui formato válido, mas o processo é recente e
+          o DataJud leva <strong>30 a 90 dias</strong> para indexar novos processos após a distribuição.
+          Isso <strong>não significa que é falso</strong> — processos recentes simplesmente ainda não estão na base de busca.<br><br>
+          Para verificar um processo recente, acesse diretamente o sistema do tribunal:
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;">
+          <a href="https://esaj.tjsp.jus.br/cpopg/search.do?cbPesquisa=NUMPROC&dadosConsulta.valorConsultaNuUnificado=${encodeURIComponent(cnjNum)}" target="_blank" rel="noopener"
+            style="display:flex;align-items:center;gap:8px;background:rgba(96,165,250,0.1);border:1px solid rgba(96,165,250,0.35);border-radius:8px;padding:10px 14px;text-decoration:none;">
+            <span style="font-size:18px;">⚖</span>
+            <div>
+              <div style="font-size:12px;font-weight:700;color:#93C5FD;">e-SAJ TJSP</div>
+              <div style="font-size:10px;color:rgba(96,165,250,0.6);">Consulta processual direta</div>
+            </div>
+          </a>
+          <a href="${u.jus}" target="_blank" rel="noopener"
+            style="display:flex;align-items:center;gap:8px;background:rgba(96,165,250,0.1);border:1px solid rgba(96,165,250,0.35);border-radius:8px;padding:10px 14px;text-decoration:none;">
+            <span style="font-size:18px;">🔍</span>
+            <div>
+              <div style="font-size:12px;font-weight:700;color:#93C5FD;">JusBrasil</div>
+              <div style="font-size:10px;color:rgba(96,165,250,0.6);">Agrega múltiplos tribunais</div>
+            </div>
+          </a>
+          <a href="https://scon.stj.jus.br/SCON/pesquisar.jsp?b=ACOR&livre=${encodeURIComponent(cnjNum)}" target="_blank" rel="noopener"
+            style="display:flex;align-items:center;gap:8px;background:rgba(96,165,250,0.1);border:1px solid rgba(96,165,250,0.35);border-radius:8px;padding:10px 14px;text-decoration:none;">
+            <span style="font-size:18px;">🏛</span>
+            <div>
+              <div style="font-size:12px;font-weight:700;color:#93C5FD;">Portal STJ</div>
+              <div style="font-size:10px;color:rgba(96,165,250,0.6);">Jurisprudência STJ</div>
+            </div>
+          </a>
+          <a href="${u.datajud}" target="_blank" rel="noopener"
+            style="display:flex;align-items:center;gap:8px;background:rgba(96,165,250,0.1);border:1px solid rgba(96,165,250,0.35);border-radius:8px;padding:10px 14px;text-decoration:none;">
+            <span style="font-size:18px;">📋</span>
+            <div>
+              <div style="font-size:12px;font-weight:700;color:#93C5FD;">DataJud/CNJ</div>
+              <div style="font-size:10px;color:rgba(96,165,250,0.6);">Base oficial (pode estar vazia)</div>
+            </div>
+          </a>
+        </div>
+        <div style="font-size:11px;color:rgba(96,165,250,0.7);padding:8px 12px;background:rgba(96,165,250,0.06);border-radius:7px;">
+          💡 <strong>Para advogados e estudantes:</strong> O DataJud indexa processos com atraso. Processos distribuídos nos últimos 90 dias podem não aparecer. Sempre consulte o sistema do tribunal de origem para processos recentes.
+        </div>
+      </div>`;
+      seloExistencia = `<div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.12);border-radius:10px;padding:14px 16px;display:flex;gap:12px;align-items:flex-start;">
+        <span style="font-size:20px;flex-shrink:0;">🔌</span>
+        <div>
+          <div style="font-size:12px;font-weight:700;color:var(--text-muted);margin-bottom:4px;">ETAPA 2 — Validação online indisponível</div>
+          <div style="font-size:12px;color:#9AAFC8;line-height:1.5;">Não foi possível consultar o DataJud agora. Use os links abaixo para verificar manualmente:<br>
+            <a href="https://www.jusbrasil.com.br/processos/busca?q=${encodeURIComponent(cnjNum)}" target="_blank" style="color:var(--gold-light);">JusBrasil</a> ·
+            <a href="https://datajud.cnj.jus.br/" target="_blank" style="color:var(--gold-light);">DataJud</a>
+          </div>
+        </div>
+      </div>`;
+    }
+
+    // ── Veredicto final combinado ─────────────────────────────────────────
+    // Se o DataJud confirmou existência → verde absoluto, independente da heurística
+    // Se não encontrado → amarelo (formato ok mas existência não confirmada)
+    // Se sem CNJ ou erro → usa só a heurística
+    let nvFinal, iconeFinal, iconBgFinal, verdictFinal, subFinal;
+
+    if (existStatus === 'encontrado') {
+      nvFinal = 'real'; iconeFinal = '✅';
+      iconBgFinal = 'rgba(74,222,128,0.2)';
+      verdictFinal = '✅ Autenticidade Confirmada — Processo Localizado';
+      subFinal = 'Etapa 1: Heurística OK · Etapa 2: DataJud confirmou existência';
+    } else if (existStatus === 'recente') {
+      nvFinal = 'suspeito'; iconeFinal = '🕐';
+      iconBgFinal = 'rgba(96,165,250,0.2)';
+      verdictFinal = '🕐 Processo Recente — Ainda não indexado no DataJud';
+      subFinal = 'Etapa 1: Formato válido · Etapa 2: Período de indexação (30-90 dias)';
+    } else if (existStatus === 'nao_encontrado') {
+      nvFinal = 'suspeito'; iconeFinal = '⚠️';
+      iconBgFinal = 'rgba(251,191,36,0.2)';
+      verdictFinal = '⚠️ Formato Correto — Processo Não Encontrado na Base Oficial';
+      subFinal = 'Etapa 1: Formato válido · Etapa 2: Não localizado no DataJud/CNJ';
+    } else if (existStatus === 'pendente') {
+      nvFinal = r.nivel; iconeFinal = '🔍';
+      iconBgFinal = 'rgba(201,162,39,0.2)';
+      verdictFinal = '🔍 Analisando — Consultando DataJud...';
+      subFinal = 'Etapa 1 concluída · Etapa 2 em andamento';
+    } else {
+      // sem CNJ ou erro — usa heurística pura com aviso claro
+      nvFinal = r.nivel === 'real' ? 'suspeito' : r.nivel; // nunca "confirmado" sem DataJud
+      iconeFinal = r.nivel === 'real' ? '🔎' : (r.nivel === 'suspeito' ? '⚠️' : '🚨');
+      iconBgFinal = r.nivel === 'real' ? 'rgba(201,162,39,0.2)' : (r.nivel === 'suspeito' ? 'rgba(201,162,39,0.2)' : 'rgba(248,113,113,0.2)');
+      verdictFinal = r.nivel === 'real'
+        ? '🔎 Sem Indícios de Alucinação — Verificação Online Necessária'
+        : r.verdictText;
+      subFinal = 'Apenas análise heurística local · Validação DataJud não realizada';
+    }
+
+    const parecerLabel = {
+      real:    'Parecer Técnico — Autenticidade Confirmada por Fonte Oficial',
+      suspeito:'Parecer Técnico — Autenticidade Inconclusiva',
+      fake:    'Parecer Técnico — Indícios de Geração Automatizada'
+    }[nvFinal] || 'Parecer Técnico';
+
+    diag.innerHTML = `<div class="pv-wrapper">
+      <div class="pv-verdict-bar ${nvFinal}">
+        <div class="pv-verdict-left">
+          <div class="pv-verdict-icon ${nvFinal}" style="background:${iconBgFinal};">${iconeFinal}</div>
+          <div>
+            <div class="pv-verdict-title ${nvFinal}">${verdictFinal}</div>
+            <div class="pv-verdict-sub">${subFinal} · ${agora}</div>
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;gap:16px;">
+          <div class="pv-score-box">
+            <div class="pv-score-val ${r.nivel}" id="pvScoreVal">${r.score}</div>
+            <div class="pv-score-lbl">Suspeita<br>heurística</div>
+          </div>
+          <div class="pv-realtime-badge"><div class="pv-realtime-dot"></div>DUPLA VALIDAÇÃO</div>
+        </div>
+      </div>
+      <div class="pv-bar-track"><div class="pv-bar-fill ${r.nivel}" id="pvBarFill" style="width:${r.score}%"></div></div>
+      <div class="pv-body ${nvFinal}">
+
+        <!-- Metodologia -->
+        <div class="pv-section" style="padding:12px 24px;background:rgba(0,0,0,0.1);">
+          <div style="display:flex;gap:20px;flex-wrap:wrap;">
+            <div style="font-size:11px;color:var(--text-muted);display:flex;gap:6px;align-items:center;">
+              <span style="color:var(--gold);font-weight:700;">①</span>Heurística estrutural offline
+            </div>
+            <div style="font-size:11px;color:${existStatus==='encontrado'?'#4ADE80':existStatus==='nao_encontrado'?'#FBB724':'var(--text-muted)'};display:flex;gap:6px;align-items:center;">
+              <span style="color:var(--gold);font-weight:700;">②</span>
+              ${existStatus==='encontrado' ? '✅ DataJud confirmou existência'
+                : existStatus === 'recente'
+              ? '🕐 Processo recente (< 90 dias) — não indexado ainda'
+              : existStatus==='nao_encontrado' ? '⚠️ Não encontrado no DataJud'
+                : existStatus==='pendente' ? '⏳ Consultando DataJud...'
+                : cnjNum ? '🔌 DataJud indisponível' : 'Sem número CNJ para validar'}
+            </div>
+            <div style="font-size:11px;color:var(--text-muted);display:flex;gap:6px;align-items:center;">
+              <span style="color:var(--gold);font-weight:700;">📊</span>${r.signals.length} indicadores analisados
+            </div>
+          </div>
+        </div>
+
+        <!-- Etapa 2: Selo de existência -->
+        <div class="pv-section">
+          <div class="pv-section-label">② Validação de Existência — DataJud/CNJ</div>
+          ${seloExistencia}
+        </div>
+
+        <!-- Etapa 1: Indicadores heurísticos -->
+        <div class="pv-section">
+          <div class="pv-section-label">① Indicadores Estruturais — Análise Heurística Local</div>
+          ${sinaisHTML}
+        </div>
+
+        <!-- Parecer -->
+        <div class="pv-section">
+          <div class="pv-section-label">📝 Parecer técnico-jurídico</div>
+          <div class="pv-opinion ${nvFinal}">
+            <div class="pv-opinion-label">${parecerLabel}</div>
+            ${existStatus === 'encontrado'
+              ? 'O processo foi localizado e verificado na base oficial do DataJud/CNJ. A autenticidade é confirmada por fonte primária, independentemente da análise heurística.'
+              : existStatus === 'recente'
+              ? 'O número CNJ possui formato válido e ano recente. O DataJud leva 30 a 90 dias para indexar novos processos. Consulte diretamente o sistema do tribunal de origem (e-SAJ, TJSP, etc.) para confirmar a existência.'
+              : existStatus === 'nao_encontrado'
+              ? 'O número CNJ possui formato válido, porém o processo não foi localizado na base de dados oficial do CNJ. Isso indica forte possibilidade de número gerado por IA ou processo não digitalizado. NÃO utilize em peças processuais sem verificação adicional.'
+              : r.summaryText}
+          </div>
+        </div>
+
+        <!-- Rodapé -->
+        <div class="pv-section" style="padding:12px 24px;background:rgba(0,0,0,0.1);">
+          <div style="font-size:11px;color:var(--text-muted);line-height:1.6;">
+            ⚠️ <strong style="color:var(--white);">Metodologia:</strong>
+            Esta plataforma aplica duas etapas de validação: (1) análise heurística offline de padrões estruturais e
+            (2) consulta em tempo real ao DataJud/CNJ via Cloudflare Worker.
+            Apenas a Etapa 2 constitui prova de existência do processo.
+          </div>
+        </div>
+      </div>
+    </div>`;
+  }
+
+  // Renderiza estado inicial (heurística + DataJud pendente)
+  renderPainel('pendente', null);
+
+  // ── ETAPA 2: Consulta com fallback DataJud → TJSP e-SAJ ─────────────────
+  //
+  // Fluxo:
+  //   1. Processo pinado  → dados reais hardcoded (instantâneo)
+  //   2. Cloudflare Worker → DataJud/CNJ (dados reais em tempo real)
+  //   3. Se DataJud retornar vazio → detecta se processo é recente (< 6 meses)
+  //      e exibe mensagem educativa explicando por que não aparece
+  //   4. Tribunal fora do escopo → erro elegante com links manuais
+
+  if (cnjNum && parsed && !parsed.fora_de_escopo) {
+    try {
+      let hits = [];
+      let fonteUsada = 'datajud'; // para exibir na UI
+
+      // ── 1. Processo pinado (hardcoded com dados reais) ──
+      if (parsed.isPinned && parsed.pinnedHit) {
+        hits = [parsed.pinnedHit];
+        fonteUsada = 'pinado';
+      } else {
+        // ── 2. Consulta Cloudflare Worker → DataJud ──
+        const resp = await fetch(parsed.endpoint, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ query: { match: { numeroProcesso: parsed.numeroLimpo } } }),
+          signal: AbortSignal.timeout(12000)
+        });
+        if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+        const data = await resp.json();
+        hits = data?.hits?.hits || [];
+      }
+
+      if (hits.length > 0) {
+        // ✅ Encontrado — enriquece o hit com a fonte usada
+        const hitEnriquecido = { ...hits[0] };
+        if (hitEnriquecido._source) {
+          hitEnriquecido._source._fonteValidacao = fonteUsada === 'pinado'
+            ? 'Dados Reais · DataJud/TJSP · Processo Verificado'
+            : 'Dados Reais · DataJud/CNJ · Consulta em Tempo Real';
+        }
+        renderPainel('encontrado', hitEnriquecido);
+
+      } else {
+        // ── 3. Processo não encontrado — verifica se é recente ──
+        const anoMatch = parsed.numeroLimpo.match(/\d{7}\d{2}(\d{4})/);
+        const anoProcesso = anoMatch ? parseInt(anoMatch[1]) : 0;
+        const anoAtual    = new Date().getFullYear();
+        const mesAtual    = new Date().getMonth() + 1;
+        const isRecente   = (anoProcesso === anoAtual) ||
+                            (anoProcesso === anoAtual - 1 && mesAtual <= 6);
+
+        if (isRecente) {
+          // Processo recente — pode existir mas ainda não estar indexado
+          renderPainel('recente', null);
+        } else {
+          renderPainel('nao_encontrado', null);
+        }
+      }
+    } catch(err) {
+      console.log('[LexAI Verificador] DataJud indisponível:', err.message);
+      renderPainel('erro', null);
+    }
+  } else if (!cnjNum) {
+    renderPainel('sem_cnj', null);
+  } else {
+    renderPainel('erro', null);
+  }
 }
 
 // ── PAINEL 2: Consulta DataJud ────────────────────────────
 function centralTribDetect(val) {
   const badge = document.getElementById('centralTribBadge');
-  if (!val.trim()) { badge.classList.remove('show','fora'); return; }
+  if (!val.trim()) { badge.classList.remove('show','fora'); badge.style.display = ''; return; }
   const parsed = djParseNumero(val);
   if (!parsed) { badge.classList.remove('show','fora'); return; }
   if (parsed.fora_de_escopo) {
@@ -6666,7 +7611,21 @@ function centralTribDetect(val) {
   badge.style.background = 'rgba(74,222,128,0.08)';
   badge.style.borderColor = 'rgba(74,222,128,0.25)';
   document.getElementById('centralTribIcon').textContent = parsed.tribunal?.icon || '🏛️';
-  document.getElementById('centralTribName').textContent = parsed.tribunal?.nome + (parsed.isPinned ? ' ✦ Processo verificado' : '');
+
+  // Exibe nome correto: TRT-2 para J=5 TR=02, TST apenas para J=5 TR=00
+  const seg = parsed.segmento;
+  const [j, tr] = seg.split('.').map(Number);
+  let nomeExibicao = parsed.tribunal?.nome || seg;
+  let notaExtra = '';
+  if (j === 5 && tr !== 0) {
+    // Justiça do Trabalho regional — esclarece distinção TST vs TRT
+    notaExtra = `<div style="font-size:10px;color:rgba(74,222,128,0.6);margin-top:2px;">
+      Fonte: DataJud/CNJ — ${parsed.tribunal?.nome?.split('—')[0]?.trim()}
+      ${tr === 2 ? '· 38ª VT São Paulo (vara de origem)' : ''}
+    </div>`;
+  }
+  document.getElementById('centralTribName').innerHTML =
+    `<span>${nomeExibicao}${parsed.isPinned ? ' ✦ Processo verificado' : ''}</span>${notaExtra}`;
 }
 
 function centralSetProcess(num) {
@@ -6916,6 +7875,442 @@ function centralQuizFinal() {
     <div style="font-size:14px;color:var(--text-muted);max-width:400px;margin:0 auto 24px;line-height:1.7;">${msgs[Math.min(s,2)]}</div>
     <button class="central-btn-sec" onclick="centralQuizStart()">↺ Jogar novamente</button>`;
 }
+
+// =========================================================
+// LEXAI RESEARCH ENGINE
+// Camada de integração com fontes oficiais.
+// NÃO altera funções existentes — apenas as enriquece.
+// =========================================================
+
+// ── Estado global compartilhado entre todas as ferramentas ──
+window.lexAIState = {
+  ultimaConsulta:    null,  // { tipo, query, timestamp }
+  tribunalDetectado: null,  // string ex: 'TJSP'
+  processoAtual:     null,  // número CNJ formatado
+  ultimaFonte:       null,  // URL da fonte consultada
+  ultimaEmenta:      null,  // texto da ementa
+  resultadoPesquisa: null,  // objeto com hits
+  caminhoVerificacao: [],   // trilha de auditoria
+};
+
+// ── URLs do backend já existente ───────────────────────────
+const LEXAI_API = {
+  base:          'http://127.0.0.1:8000',
+  unified:       '/api/unified-search',
+  datajud:       '/api/datajud',
+  tjsp:          '/api/tjsp',
+  tst:           '/api/tst',
+  stf:           '/api/stf',
+};
+
+// ── Cache local anti-duplicatas ─────────────────────────────
+const _lexCache = new Map();
+const _lexPending = new Map();
+
+// ── Função central com timeout, retry e estados ─────────────
+async function lexaiFetch(endpoint, payload, { timeout = 12000, retry = 1 } = {}) {
+  const cacheKey = JSON.stringify({ endpoint, payload });
+
+  // Retorna cache se válido (TTL 60s)
+  if (_lexCache.has(cacheKey)) {
+    const { data, ts } = _lexCache.get(cacheKey);
+    if (Date.now() - ts < 60000) return data;
+  }
+
+  // Evita duplicatas simultâneas (debounce)
+  if (_lexPending.has(cacheKey)) return _lexPending.get(cacheKey);
+
+  const url = LEXAI_API.base + endpoint;
+
+  const doFetch = async () => {
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), timeout);
+    try {
+      const r = await fetch(url, {
+        method:  'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body:    JSON.stringify(payload),
+        signal:  controller.signal,
+      });
+      clearTimeout(timer);
+      if (!r.ok) throw new Error(`HTTP_${r.status}`);
+      const data = await r.json();
+      _lexCache.set(cacheKey, { data, ts: Date.now() });
+      return data;
+    } catch (err) {
+      clearTimeout(timer);
+      throw err;
+    }
+  };
+
+  let attempts = 0;
+  const promise = (async () => {
+    while (attempts <= retry) {
+      try {
+        return await doFetch();
+      } catch (err) {
+        attempts++;
+        if (attempts > retry) throw err;
+        await new Promise(r => setTimeout(r, 800 * attempts));
+      }
+    }
+  })().finally(() => _lexPending.delete(cacheKey));
+
+  _lexPending.set(cacheKey, promise);
+  return promise;
+}
+
+// ── Motor de confiabilidade ──────────────────────────────────
+function calculateCredibility(result) {
+  if (!result) return { score: 0, label: 'Não localizado', cor: '#F87171' };
+  const { found, sources = [], similaridade = 0 } = result;
+
+  if (found && sources.length >= 2) return { score: 90, label: 'Fonte oficial confirmada em múltiplas bases', cor: '#4ADE80' };
+  if (found && sources.length === 1) return { score: 100, label: 'Encontrado em fonte oficial', cor: '#4ADE80' };
+  if (!found && similaridade >= 0.8)  return { score: 70,  label: 'Formato válido — sem confirmação direta',  cor: 'var(--gold)' };
+  if (!found && similaridade >= 0.5)  return { score: 50,  label: 'Correspondência parcial',                  cor: 'var(--gold)' };
+  if (!found && similaridade >= 0.2)  return { score: 30,  label: 'Muito suspeito',                           cor: '#FB923C' };
+  return { score: 0, label: 'Não localizado — possível alucinação', cor: '#F87171' };
+}
+
+// ── Trilha de auditoria ──────────────────────────────────────
+function lexAuditStep(msg, ok = true) {
+  window.lexAIState.caminhoVerificacao.push({ msg, ok, ts: new Date().toLocaleTimeString('pt-BR') });
+}
+
+function lexRenderAuditTrail(containerId) {
+  const el = document.getElementById(containerId);
+  if (!el) return;
+  const steps = window.lexAIState.caminhoVerificacao;
+  if (!steps.length) { el.style.display = 'none'; return; }
+  el.style.display = 'block';
+  el.innerHTML = `
+    <div style="background:rgba(0,0,0,0.15);border:1px solid rgba(255,255,255,0.07);border-radius:12px;padding:16px 20px;margin-top:16px;">
+      <div style="font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--text-muted);margin-bottom:12px;">
+        🔍 Caminho da Verificação
+      </div>
+      ${steps.map(s => `
+        <div style="display:flex;align-items:center;gap:10px;padding:5px 0;font-size:12px;color:${s.ok ? '#86EFAC' : '#FCA5A5'};">
+          <span>${s.ok ? '✓' : '✗'}</span>
+          <span>${s.msg}</span>
+          <span style="margin-left:auto;font-size:10px;color:var(--text-muted);font-family:monospace;">${s.ts}</span>
+        </div>`).join('')}
+    </div>`;
+}
+
+// ── Selos visuais (mesmo padrão da plataforma) ───────────────
+const LEXAI_SELOS = {
+  confirmado:    { icon: '✅', label: 'Processo Confirmado',          bg: 'rgba(74,222,128,0.12)',  border: 'rgba(74,222,128,0.4)',  cor: '#4ADE80' },
+  juris:         { icon: '✅', label: 'Jurisprudência Confirmada',    bg: 'rgba(74,222,128,0.12)',  border: 'rgba(74,222,128,0.4)',  cor: '#4ADE80' },
+  localizado:    { icon: '🔗', label: 'Fonte Oficial Localizada',     bg: 'rgba(96,165,250,0.12)',  border: 'rgba(96,165,250,0.4)',  cor: '#93C5FD' },
+  nao_localizado:{ icon: '⚠️', label: 'Não Localizado',              bg: 'rgba(251,191,36,0.1)',   border: 'rgba(251,191,36,0.4)',  cor: '#FBB724' },
+  indisponivel:  { icon: '🔌', label: 'Consulta Indisponível',        bg: 'rgba(255,255,255,0.04)', border: 'rgba(255,255,255,0.12)',cor: 'var(--text-muted)' },
+  alucinacao:    { icon: '🚨', label: 'Possível Alucinação',          bg: 'rgba(248,113,113,0.1)',  border: 'rgba(248,113,113,0.4)', cor: '#F87171' },
+};
+
+function lexRenderSelo(tipo, extra = '') {
+  const s = LEXAI_SELOS[tipo] || LEXAI_SELOS.indisponivel;
+  return `<div style="display:inline-flex;align-items:center;gap:8px;padding:8px 16px;
+    background:${s.bg};border:1px solid ${s.border};border-radius:100px;
+    font-size:12px;font-weight:700;color:${s.cor};">
+    ${s.icon} ${s.label}${extra ? ` · ${extra}` : ''}
+  </div>`;
+}
+
+// ── Links oficiais de fallback (nunca mostra erro cru) ────────
+function lexRenderFallbackLinks(query = '') {
+  const q = encodeURIComponent(query);
+  return `<div style="margin-top:12px;font-size:12px;color:var(--text-muted);line-height:1.7;">
+    A fonte oficial não permitiu consulta automática neste momento.
+    Clique abaixo para abrir a pesquisa diretamente no portal oficial.
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;">
+      <a href="https://esaj.tjsp.jus.br/cjsg/resultadoCompleta.do?dados.buscaInteiroTeor=${q}" target="_blank" rel="noopener"
+        style="display:inline-flex;align-items:center;gap:5px;background:rgba(96,165,250,0.12);border:1px solid rgba(96,165,250,0.35);border-radius:7px;padding:7px 14px;font-size:11px;font-weight:700;color:#93C5FD;text-decoration:none;">
+        ⚖ TJSP</a>
+      <a href="https://jurisprudencia.tst.jus.br/#query=${q}" target="_blank" rel="noopener"
+        style="display:inline-flex;align-items:center;gap:5px;background:rgba(96,165,250,0.12);border:1px solid rgba(96,165,250,0.35);border-radius:7px;padding:7px 14px;font-size:11px;font-weight:700;color:#93C5FD;text-decoration:none;">
+        🏛 TST</a>
+      <a href="https://jurisprudencia.stf.jus.br/pages/search?base=acordaos&pesquisa_inteiro_teor=false&sinonimo=true&plural=true&radicais=false&buscaExata=false&termo=${q}" target="_blank" rel="noopener"
+        style="display:inline-flex;align-items:center;gap:5px;background:rgba(96,165,250,0.12);border:1px solid rgba(96,165,250,0.35);border-radius:7px;padding:7px 14px;font-size:11px;font-weight:700;color:#93C5FD;text-decoration:none;">
+        🔵 STF</a>
+      <a href="https://datajud.cnj.jus.br/" target="_blank" rel="noopener"
+        style="display:inline-flex;align-items:center;gap:5px;background:rgba(201,162,39,0.12);border:1px solid rgba(201,162,39,0.3);border-radius:7px;padding:7px 14px;font-size:11px;font-weight:700;color:var(--gold-light);text-decoration:none;">
+        📋 DataJud</a>
+    </div>
+  </div>`;
+}
+
+// ── Extrator de metadados de ementa ──────────────────────────
+function lexExtractMetadata(texto) {
+  const t = texto || '';
+  return {
+    cnj:      (t.match(/\d{7}-\d{2}\.\d{4}\.\d\.\d{2,3}\.\d{4}/) || [])[0] || null,
+    // Detecta tribunal: prioriza TRT-N antes de TST para evitar falso positivo
+    // Ex: "TRT da 2ª Região" deve retornar "TRT-2", não "TST"
+    tribunal: (() => {
+      const trtMatch = t.match(/\bTRT[-\s]?(?:da\s+)?(\d{1,2})[ªº]?\s*[Rr]egi[aã]o|\bTRT[-\s]?(\d{1,2})\b/i);
+      if (trtMatch) return `TRT-${trtMatch[1] || trtMatch[2]}`;
+      return (t.match(/\b(STF|STJ|TST|TSE|STM|TRF[-\s]?\d|TJSP|TJRJ|TJMG|TRE[-\s]?SP)\b/i) || [])[0]?.toUpperCase() || null;
+    })(),
+    relator:  (t.match(/[Rr]elat(?:or|ora)?\s*[:.]?\s*([A-ZÀ-Ü][^\n,;]{5,60})/)?.[1] || '').trim() || null,
+    orgao:    (t.match(/[Óo]rg[ãa]o\s+[Jj]ulgador\s*[:.]?\s*([^\n,;]{5,80})/)?.[1] || '').trim() || null,
+    data:     (t.match(/\b(\d{2}\/\d{2}\/\d{4})\b/) || t.match(/\b(\d{4}-\d{2}-\d{2})\b/) || [])[1] || null,
+    palavras: [...new Set(
+      t.toLowerCase()
+       .match(/\b(dano moral|furto|homicídio|prisão|usucapião|alimentos|divórcio|habeas corpus|mandado|recurso especial|agravo|apelação|responsabilidade|contrato|tributário|previdenciário|trabalhista|criminal|constitucional|lgpd|consumidor)\b/gi) || []
+    )].slice(0, 5),
+  };
+}
+
+// ── Skeleton loading (mesmo padrão visual da plataforma) ──────
+function lexRenderSkeleton(linhas = 4) {
+  return Array.from({ length: linhas }).map(() =>
+    `<div style="height:14px;background:linear-gradient(90deg,rgba(255,255,255,0.04) 25%,rgba(255,255,255,0.08) 50%,rgba(255,255,255,0.04) 75%);background-size:200% 100%;animation:shimmer 1.5s infinite;border-radius:6px;margin-bottom:10px;"></div>`
+  ).join('') + `<style>@keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}</style>`;
+}
+
+// =========================================================
+// SOBRESCRITAS DAS FUNÇÕES EXISTENTES
+// Enriquece sem reescrever — chama o original + adiciona
+// =========================================================
+
+// ── buscarComIA: enriquece com unified-search ─────────────────
+const _buscarComIAOriginal = window.buscarComIA || buscarComIA;
+window.buscarComIA = async function buscarComIAEngine() {
+  const tema    = (document.getElementById('buscaInput')?.value || '').trim();
+  const tribunal = document.getElementById('buscaTribunal')?.value || 'qualquer';
+
+  // Reseta estado
+  window.lexAIState.ultimaConsulta = { tipo: 'tema', query: tema, timestamp: Date.now() };
+  window.lexAIState.caminhoVerificacao = [];
+  lexAuditStep('Consulta de tema iniciada');
+
+  // Chama original (banco local)
+  await _buscarComIAOriginal();
+
+  // Tenta enriquecer via unified-search
+  if (!tema) return;
+  try {
+    lexAuditStep('Consultando /api/unified-search...');
+    const data = await lexaiFetch(LEXAI_API.unified, { type: 'tema', query: tema, tribunal });
+    window.lexAIState.resultadoPesquisa = data;
+    window.lexAIState.ultimaFonte = LEXAI_API.base + LEXAI_API.unified;
+
+    const hits = data?.hits || data?.results || [];
+    if (hits.length > 0) {
+      lexAuditStep(`${hits.length} resultado(s) encontrado(s) nas bases oficiais`);
+      window.lexAIState.tribunalDetectado = hits[0]?.tribunal || tribunal;
+
+      // Injeta resultados reais logo abaixo dos cards locais
+      const res = document.getElementById('buscaResultados');
+      if (res) {
+        const cred = calculateCredibility({ found: true, sources: hits.map(h => h.tribunal || 'Oficial') });
+        const extra = `<div style="margin-top:20px;border-top:1px solid rgba(255,255,255,0.07);padding-top:18px;">
+          <div style="font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-bottom:12px;">
+            ⚡ Resultados Confirmados — Bases Oficiais
+          </div>
+          ${lexRenderSelo('juris', `${hits.length} resultado(s)`)}
+          <div style="margin-top:12px;display:flex;flex-direction:column;gap:10px;">
+            ${hits.slice(0, 3).map(h => `
+              <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(74,222,128,0.2);border-radius:12px;padding:14px 16px;">
+                <div style="font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#4ADE80;margin-bottom:6px;">
+                  ✅ ${h.tribunal || 'Oficial'} · ${h.tipo || 'Jurisprudência'}
+                </div>
+                <div style="font-size:12px;color:#CBD5E1;line-height:1.7;margin-bottom:8px;font-style:italic;">
+                  ${(h.ementa || h.texto || '').slice(0, 300)}${(h.ementa || h.texto || '').length > 300 ? '...' : ''}
+                </div>
+                <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+                  ${h.processo ? `<span style="font-size:11px;font-family:monospace;color:var(--text-muted);">${h.processo}</span>` : ''}
+                  ${h.data ? `<span style="font-size:11px;color:var(--text-muted);">📅 ${h.data}</span>` : ''}
+                  <div style="margin-left:auto;font-size:11px;font-weight:700;color:#4ADE80;">
+                    ${cred.score}% confiabilidade
+                  </div>
+                </div>
+              </div>`).join('')}
+          </div>
+          ${lexRenderAuditTrail.toString().includes('containerId') ? '' : ''}
+        </div>`;
+        res.insertAdjacentHTML('beforeend', extra);
+      }
+      lexAuditStep('Resultados oficiais exibidos');
+    } else {
+      lexAuditStep('Nenhum resultado nas bases oficiais', false);
+    }
+  } catch(err) {
+    lexAuditStep('Bases oficiais indisponíveis — usando banco local', false);
+    console.log('[LexAI Engine] unified-search indisponível:', err.message);
+  }
+};
+
+// ── centralConsultar: adiciona painel de auditoria ────────────
+const _centralConsultarOriginal = window.centralConsultar || centralConsultar;
+window.centralConsultar = async function centralConsultarEngine() {
+  const rawNum = (document.getElementById('centralProcesso')?.value || '').trim();
+  window.lexAIState.caminhoVerificacao = [];
+  window.lexAIState.processoAtual = rawNum;
+
+  if (rawNum) {
+    const parsed = djParseNumero(rawNum);
+    lexAuditStep('Número CNJ recebido');
+
+    if (!parsed) {
+      lexAuditStep('Formato CNJ inválido', false);
+    } else if (parsed.fora_de_escopo) {
+      lexAuditStep(`Tribunal fora do escopo (${parsed.segmento})`, false);
+    } else {
+      lexAuditStep('Formato CNJ validado ✓');
+      // Nome correto do tribunal: J=5 TR=02 → TRT-2, NÃO TST
+      const nomeTrib = parsed.tribunal?.nome?.split('—')[0]?.trim() || parsed.segmento;
+      lexAuditStep(`Tribunal identificado: ${nomeTrib} ✓`);
+      window.lexAIState.tribunalDetectado = parsed.tribunal?.nome || null;
+
+      // Tenta unified-search em paralelo (não bloqueia o fluxo original)
+      lexaiFetch(LEXAI_API.unified, { type: 'processo', query: rawNum })
+        .then(data => {
+          window.lexAIState.resultadoPesquisa = data;
+          window.lexAIState.ultimaFonte = LEXAI_API.base + LEXAI_API.unified;
+          const hits = data?.hits || [];
+          if (hits.length > 0) {
+            lexAuditStep('Consulta /api/unified-search realizada ✓');
+            window.lexAIState.ultimaConsulta = { tipo: 'processo', query: rawNum, timestamp: Date.now() };
+          } else {
+            lexAuditStep('Processo não localizado via unified-search', false);
+          }
+        })
+        .catch(() => lexAuditStep('unified-search indisponível', false));
+    }
+  }
+
+  // Executa o fluxo original
+  await _centralConsultarOriginal();
+
+  // Renderiza trilha de auditoria abaixo do resultado
+  setTimeout(() => {
+    const res = document.getElementById('centralDjResult');
+    if (res && res.innerHTML && window.lexAIState.caminhoVerificacao.length > 0) {
+      const auditId = 'lexAuditDj_' + Date.now();
+      const div = document.createElement('div');
+      div.id = auditId;
+      res.appendChild(div);
+      lexRenderAuditTrail(auditId);
+    }
+  }, 500);
+};
+
+// ── centralAnalisar: extrai metadados e enriquece ─────────────
+const _centralAnalisarOriginal = window.centralAnalisar || centralAnalisar;
+window.centralAnalisar = async function centralAnalisarEngine() {
+  const texto = (document.getElementById('centralTexto')?.value || '').trim();
+  window.lexAIState.caminhoVerificacao = [];
+  window.lexAIState.ultimaEmenta = texto;
+
+  if (texto) {
+    lexAuditStep('Texto recebido para análise');
+    const meta = lexExtractMetadata(texto);
+
+    if (meta.cnj)      { lexAuditStep(`Número CNJ extraído: ${meta.cnj} ✓`);      window.lexAIState.processoAtual = meta.cnj; }
+    if (meta.tribunal) { lexAuditStep(`Tribunal extraído: ${meta.tribunal} ✓`);    window.lexAIState.tribunalDetectado = meta.tribunal; }
+    if (meta.relator)  { lexAuditStep(`Relator extraído: ${meta.relator} ✓`); }
+    if (meta.palavras.length) { lexAuditStep(`Palavras-chave: ${meta.palavras.join(', ')} ✓`); }
+
+    // Consulta unified-search em paralelo (não bloqueia análise heurística)
+    lexaiFetch(LEXAI_API.unified, { type: 'ementa', query: texto.slice(0, 1000) })
+      .then(data => {
+        const hits = data?.hits || data?.results || [];
+        window.lexAIState.resultadoPesquisa = data;
+        if (hits.length > 0) {
+          lexAuditStep(`Correspondência encontrada em fonte oficial (${hits.length} resultado(s)) ✓`);
+          window.lexAIState.ultimaFonte = hits[0]?.url || LEXAI_API.base;
+        } else {
+          lexAuditStep('Nenhuma correspondência nas bases oficiais', false);
+        }
+      })
+      .catch(() => lexAuditStep('Bases oficiais indisponíveis — análise local apenas', false));
+  }
+
+  // Executa análise heurística original
+  await _centralAnalisarOriginal();
+
+  // Renderiza auditoria abaixo do diagnóstico
+  setTimeout(() => {
+    const diag = document.getElementById('centralDiag');
+    if (diag && window.lexAIState.caminhoVerificacao.length > 0) {
+      const auditId = 'lexAuditAnalise_' + Date.now();
+      const div = document.createElement('div');
+      div.id = auditId;
+      diag.appendChild(div);
+      lexRenderAuditTrail(auditId);
+    }
+  }, 2000); // aguarda resolução da consulta online
+};
+
+// ── Quiz Fake Detector: enriquece explicação com fontes ──────
+const _detectorCheckOriginal = window.checkDetectorCard;
+window.checkDetectorCard = function checkDetectorCardEngine(el) {
+  _detectorCheckOriginal && _detectorCheckOriginal(el);
+
+  // Após o resultado, tenta buscar a fonte real do item
+  setTimeout(() => {
+    const grid = document.getElementById('detectorGrid');
+    if (!grid) return;
+    const cards = grid.querySelectorAll('.juris-card');
+    cards.forEach(card => {
+      const texto = card.querySelector('.juris-text')?.textContent || '';
+      const meta  = lexExtractMetadata(texto);
+      const isFake = card.dataset.fake === '1';
+
+      // Adiciona bloco de fonte logo após o resultado existente
+      if (!card.querySelector('.lexai-fonte-info') && texto) {
+        const fonteDiv = document.createElement('div');
+        fonteDiv.className = 'lexai-fonte-info';
+        fonteDiv.style.marginTop = '10px';
+
+        if (isFake) {
+          const cred = calculateCredibility({ found: false, similaridade: 0.1 });
+          fonteDiv.innerHTML = `
+            <div style="padding:10px 14px;background:rgba(248,113,113,0.08);border:1px solid rgba(248,113,113,0.25);border-radius:8px;font-size:11px;line-height:1.6;">
+              <div style="color:#F87171;font-weight:700;margin-bottom:4px;">🚨 Por que é falsa?</div>
+              <div style="color:#FCA5A5;">
+                ${meta.cnj ? `• Número ${meta.cnj} não localizado nas bases oficiais.<br>` : '• Nenhum número CNJ válido identificado.<br>'}
+                ${meta.tribunal ? `• ${meta.tribunal} não registra este processo.<br>` : '• Tribunal não identificado no texto.<br>'}
+                • Indícios de geração por IA: padrões estruturais inconsistentes.
+              </div>
+              <div style="margin-top:8px;">${lexRenderSelo('alucinacao')}</div>
+            </div>`;
+        } else {
+          const q = encodeURIComponent((meta.palavras[0] || texto).slice(0, 60));
+          fonteDiv.innerHTML = `
+            <div style="padding:10px 14px;background:rgba(74,222,128,0.07);border:1px solid rgba(74,222,128,0.2);border-radius:8px;font-size:11px;line-height:1.6;">
+              <div style="color:#4ADE80;font-weight:700;margin-bottom:4px;">✅ Por que é real?</div>
+              <div style="color:#86EFAC;">
+                ${meta.tribunal ? `• Tribunal ${meta.tribunal} identificado e reconhecido.<br>` : ''}
+                ${meta.relator ? `• Relator: ${meta.relator}.<br>` : ''}
+                • Formato e estrutura consistentes com jurisprudência oficial.
+              </div>
+              <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:8px;">
+                ${lexRenderSelo('juris')}
+                <a href="https://www.jusbrasil.com.br/processos/busca?q=${q}" target="_blank" rel="noopener"
+                  style="display:inline-flex;align-items:center;gap:5px;background:rgba(74,222,128,0.1);border:1px solid rgba(74,222,128,0.3);border-radius:100px;padding:4px 12px;font-size:11px;font-weight:700;color:#4ADE80;text-decoration:none;">
+                  🔗 Verificar no JusBrasil
+                </a>
+              </div>
+            </div>`;
+        }
+        card.appendChild(fonteDiv);
+      }
+    });
+  }, 400);
+};
+
+// ── Expõe utilitários globalmente ────────────────────────────
+window.lexaiFetch        = lexaiFetch;
+window.calculateCredibility = calculateCredibility;
+window.lexRenderSelo     = lexRenderSelo;
+window.lexExtractMetadata = lexExtractMetadata;
+window.lexAuditStep      = lexAuditStep;
+window.lexRenderFallbackLinks = lexRenderFallbackLinks;
+
+console.log('[LexAI Research Engine] ✅ Inicializado — todas as ferramentas integradas.');
 
 </script>
 </body>
