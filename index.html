@@ -4477,6 +4477,9 @@ Exemplo:
             <button class="central-sug-chip" onclick="centralBuscaRapida('LGPD responsabilidade civil','STJ')">LGPD · responsabilidade</button>
             <button class="central-sug-chip" onclick="centralBuscaRapida('progressão regime hediondo','STF')">Progressão regime · STF</button>
             <button class="central-sug-chip" onclick="centralBuscaRapida('inteligência artificial advocacia','STJ')">IA na advocacia · STJ</button>
+            <button class="central-sug-chip" onclick="centralBuscaRapida('depositário infiel prisão civil','STF')">Depositário infiel · STF</button>
+            <button class="central-sug-chip" onclick="centralBuscaRapida('união estável herança','STF')">União estável herança · STF</button>
+            <button class="central-sug-chip" onclick="centralBuscaRapida('uso de algemas','STF')">Algemas · STF</button>
           </div>
 
           <!-- Loading -->
@@ -6750,34 +6753,97 @@ async function buscarComIA() {
   }
 
   // UI: loading
-  document.getElementById('buscaEmpty').style.display = 'none';
-  document.getElementById('buscaLoading').style.display = 'flex';
+  document.getElementById('buscaEmpty').style.display    = 'none';
+  document.getElementById('buscaLoading').style.display  = 'flex';
   document.getElementById('buscaResultados').style.display = 'none';
-  document.getElementById('buscaResultados').innerHTML = '';
+  document.getElementById('buscaResultados').innerHTML   = '';
 
   const btn  = document.getElementById('buscaBtn');
   const icon = document.getElementById('buscaBtnIcon');
   const txt  = document.getElementById('buscaBtnText');
   btn.disabled = true; icon.textContent = '⏳'; txt.textContent = 'Buscando...';
 
-  // Simula delay de busca (realista)
-  await new Promise(r => setTimeout(r, 900 + Math.random()*700));
-
   try {
-    const teses = encontrarTeses(tema, tribunal, qtd);
-    const cards = teses.map((t, i) => renderBuscaCard(formatarJurisprudencia(t, tribunal, i), i, tribunal));
+    // ── 1. Chama /api/unified-search no Cloudflare Worker ──
+    let cards = [];
+    let fonteLabel = '';
+
+    try {
+      const data = await lexaiFetch('/api/unified-search', {
+        type:     'tema',
+        query:    tema,
+        tribunal: tribunal === 'qualquer' ? '' : tribunal,
+      }, { timeout: 10000, retry: 1 });
+
+      const hits = data?.hits || data?.results || [];
+
+      if (hits.length > 0) {
+        fonteLabel = data.fonte || 'API Oficial';
+        cards = hits.slice(0, qtd).map((h, i) => {
+          const texto = h.tese || h.ementa || h.texto || h.tema || '';
+          const trib  = h.tribunal || tribunal.toUpperCase() || 'Jurisprudência';
+          const ref   = [h.numero, h.relator, h.data].filter(Boolean).join(' · ');
+          return renderBuscaCard(texto || formatarJurisprudencia(h, tribunal, i), i, trib, { ref, fromAPI: true, fonte: fonteLabel });
+        });
+      }
+    } catch(apiErr) {
+      console.log('[LexAI buscarComIA] API indisponível, usando base local:', apiErr.message);
+    }
+
+    // ── 2. Se tribunal é STF, tenta rota específica ──
+    if ((tribunal === 'STF' || tribunal === 'qualquer') && cards.length === 0) {
+      try {
+        const stfData = await lexaiFetch('/api/stf', {
+          query: tema,
+          tipos: ['acordao', 'sumula', 'sv', 'rg'],
+        }, { timeout: 10000, retry: 0 });
+
+        if (stfData && !stfData.status) {
+          const stfHits = [
+            ...(stfData.acordaos || []),
+            ...(stfData.sumulas  || []),
+            ...(stfData.sv       || []),
+            ...(stfData.rg       || []),
+          ];
+          if (stfHits.length > 0) {
+            fonteLabel = stfData.fonte || 'STF';
+            cards = stfHits.slice(0, qtd).map((h, i) =>
+              renderBuscaCard(h.tese || h.tema || '', i, h.tribunal || 'STF', {
+                ref: [h.numero, h.relator, h.data].filter(Boolean).join(' · '),
+                fromAPI: true,
+                fonte: fonteLabel,
+                tipo: h.tipo,
+              })
+            );
+          }
+        }
+      } catch(stfErr) {
+        console.log('[LexAI buscarComIA] STF indisponível:', stfErr.message);
+      }
+    }
+
+    // ── 3. Fallback: base local simulada ──
+    if (cards.length === 0) {
+      const teses = encontrarTeses(tema, tribunal, qtd);
+      cards = teses.map((t, i) => renderBuscaCard(formatarJurisprudencia(t, tribunal, i), i, tribunal));
+      fonteLabel = 'Base local';
+    }
 
     document.getElementById('buscaLoading').style.display = 'none';
     const res = document.getElementById('buscaResultados');
     res.innerHTML = cards.join('');
     res.style.display = 'flex';
 
+    // Atualiza estado global
+    window.lexAIState.ultimaConsulta = { tipo: 'tema', query: tema, timestamp: Date.now() };
+    window.lexAIState.ultimaFonte    = fonteLabel;
+
   } catch(err) {
     document.getElementById('buscaLoading').style.display = 'none';
-    document.getElementById('buscaEmpty').style.display = 'flex';
+    document.getElementById('buscaEmpty').style.display   = 'flex';
     document.getElementById('buscaEmpty').innerHTML = `
       <div style="font-size:36px;">⚠️</div>
-      <div style="font-size:13px;color:#F87171;font-weight:600;">Erro ao gerar resultado</div>
+      <div style="font-size:13px;color:#F87171;font-weight:600;">Erro ao buscar</div>
       <div style="font-size:12px;color:var(--text-muted);max-width:260px;text-align:center;">${err.message}</div>
       <button onclick="buscarComIA()" style="margin-top:8px;background:var(--gold);border:none;border-radius:8px;padding:10px 20px;color:var(--navy);font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;">↺ Tentar novamente</button>`;
   } finally {
@@ -6871,30 +6937,46 @@ function botoesVerificacao(numeroCNJ, tribunalKey) {
   return html;
 }
 
-function renderBuscaCard(texto, index, tribunal) {
+function renderBuscaCard(texto, index, tribunal, opts = {}) {
   const id = 'buscard_' + index;
-
-  // Extrai número CNJ do texto se existir
-  const cnj = texto.match(/\d{7}-\d{2}\.\d{4}\.\d\.\d{2,3}\.\d{4}/);
+  const cnj       = texto.match(/\d{7}-\d{2}\.\d{4}\.\d\.\d{2,3}\.\d{4}/);
   const numeroCNJ = cnj ? cnj[0] : '';
+  const fromAPI   = opts.fromAPI || false;
+  const fonte     = opts.fonte   || '';
+  const ref       = opts.ref     || '';
+  const tipo      = opts.tipo    || '';
+
+  // Badge de tipo STF
+  const tipoMap = { acordao:'⚖️ Acórdão', sumula:'📋 Súmula', sv:'🔒 Súmula Vinculante', rg:'🔵 Repercussão Geral' };
+  const tipoLabel = tipoMap[tipo] || '';
+
+  // Aviso de fonte — API real vs simulado
+  const avisoFonte = fromAPI
+    ? `<div style="background:rgba(74,222,128,0.08);border:1px solid rgba(74,222,128,0.25);border-radius:8px;padding:9px 12px;font-size:11px;color:#86EFAC;line-height:1.5;margin-bottom:12px;">
+        ✅ <strong>Fonte oficial confirmada</strong>${fonte ? ' · ' + fonte : ''}.
+        ${ref ? `<span style="color:var(--text-muted);margin-left:6px;">${ref}</span>` : ''}
+       </div>`
+    : `<div style="background:rgba(201,162,39,0.08);border:1px solid rgba(201,162,39,0.2);border-radius:8px;padding:9px 12px;font-size:11px;color:var(--gold-light);line-height:1.5;margin-bottom:12px;">
+        ⚠️ <strong>Esta jurisprudência é simulada</strong> com base em teses jurídicas reais, mas o processo específico pode não existir. Clique nos botões abaixo para verificar nas fontes oficiais.
+       </div>`;
 
   return `
-    <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:14px;padding:20px 22px;animation:fadeIn 0.3s ease;">
+    <div style="background:rgba(255,255,255,0.03);border:1px solid ${fromAPI ? 'rgba(74,222,128,0.2)' : 'rgba(255,255,255,0.08)'};border-radius:14px;padding:20px 22px;animation:fadeIn 0.3s ease;">
       <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:12px;">
-        <div style="font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--gold);">
-          🏛 ${tribunal === 'qualquer' ? 'STF / STJ / TST' : tribunal} — Jurisprudência ${index + 1}
+        <div style="display:flex;align-items:center;gap:8px;">
+          <div style="font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--gold);">
+            🏛 ${tribunal === 'qualquer' ? 'STF / STJ / TST' : tribunal} — Jurisprudência ${index + 1}
+          </div>
+          ${tipoLabel ? `<span style="font-size:10px;background:rgba(96,165,250,0.1);border:1px solid rgba(96,165,250,0.3);border-radius:100px;padding:2px 8px;color:#93C5FD;font-weight:700;">${tipoLabel}</span>` : ''}
+          ${fromAPI ? `<span style="font-size:10px;background:rgba(74,222,128,0.12);border:1px solid rgba(74,222,128,0.3);border-radius:100px;padding:2px 8px;color:#4ADE80;font-weight:700;">⚡ API Oficial</span>` : ''}
         </div>
         ${numeroCNJ ? `<div style="font-size:11px;color:var(--text-muted);font-family:monospace;">${numeroCNJ}</div>` : ''}
       </div>
 
       <div id="${id}" style="font-size:13px;color:#CBD5E1;line-height:1.8;margin-bottom:16px;font-style:italic;">${texto.trim().replace(/\n/g, '<br>')}</div>
 
-      <!-- Aviso de simulação -->
-      <div style="background:rgba(201,162,39,0.08);border:1px solid rgba(201,162,39,0.2);border-radius:8px;padding:9px 12px;font-size:11px;color:var(--gold-light);line-height:1.5;margin-bottom:12px;">
-        ⚠️ <strong>Esta jurisprudência é simulada</strong> com base em teses jurídicas reais, mas o processo específico pode não existir. Clique nos botões abaixo para verificar nas fontes oficiais.
-      </div>
+      ${avisoFonte}
 
-      <!-- Botões principais -->
       <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px;">
         <button onclick="enviarParaAnaliseTexto('${id}')"
           style="display:inline-flex;align-items:center;gap:6px;background:linear-gradient(135deg,rgba(201,162,39,0.2),rgba(201,162,39,0.1));border:1px solid var(--gold);border-radius:8px;padding:8px 14px;font-size:12px;font-weight:700;color:var(--gold-light);cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.2s;"
@@ -6910,7 +6992,6 @@ function renderBuscaCard(texto, index, tribunal) {
         </button>
       </div>
 
-      <!-- Botões de verificação nas fontes oficiais -->
       <div style="border-top:1px solid rgba(255,255,255,0.06);padding-top:10px;">
         <div style="font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--text-muted);margin-bottom:8px;">✅ Verificar nas fontes oficiais:</div>
         <div style="display:flex;gap:6px;flex-wrap:wrap;">${botoesVerificacao(numeroCNJ, tribunal)}</div>
@@ -7780,45 +7861,365 @@ function centralBuscaRapida(tema, trib) {
   centralBuscar();
 }
 
+// =========================================================
+// MÓDULO STF — Consulta oficial de acórdãos, súmulas,
+// súmulas vinculantes, repercussão geral e processos.
+// Integra: /api/stf · /api/stf-jurisprudencia ·
+//          /api/stf-sumulas · /api/datajud · /api/unified-search
+// Não altera design existente.
+// =========================================================
+
+// ── URLs oficiais STF ─────────────────────────────────────
+const STF_URLS = {
+  jurisprudencia: 'https://jurisprudencia.stf.jus.br',
+  sumulas:        'https://jurisprudencia.stf.jus.br/pages/search?base=sumulas',
+  sv:             'https://jurisprudencia.stf.jus.br/pages/search?base=vetos',
+  rg:             'https://jurisprudencia.stf.jus.br/pages/search?base=acordaos&pesquisa_inteiro_teor=false&sinonimo=true&plural=true&radicais=false&buscaExata=false&page=1&pageSize=10&queryString=',
+  acordaos:       'https://jurisprudencia.stf.jus.br/pages/search?base=acordaos',
+  busca:          q => `https://jurisprudencia.stf.jus.br/pages/search?base=acordaos&pesquisa_inteiro_teor=false&sinonimo=true&plural=true&radicais=false&buscaExata=false&page=1&pageSize=10&queryString=${encodeURIComponent(q)}`,
+};
+
+// ── Tipos de resultado STF ────────────────────────────────
+const STF_TIPOS = {
+  acordao: { label: 'Acórdão',              icon: '⚖️',  cor: '#93C5FD', bg: 'rgba(96,165,250,0.08)',  border: 'rgba(96,165,250,0.3)'  },
+  sumula:  { label: 'Súmula STF',           icon: '📋',  cor: '#4ADE80', bg: 'rgba(74,222,128,0.08)',  border: 'rgba(74,222,128,0.3)'  },
+  sv:      { label: 'Súmula Vinculante',    icon: '🔒',  cor: '#F59E0B', bg: 'rgba(245,158,11,0.08)', border: 'rgba(245,158,11,0.3)'  },
+  rg:      { label: 'Repercussão Geral',    icon: '🔵',  cor: '#C4B5FD', bg: 'rgba(196,181,253,0.08)',border: 'rgba(196,181,253,0.3)' },
+  processo:{ label: 'Processo (DataJud)',   icon: '📁',  cor: '#86EFAC', bg: 'rgba(74,222,128,0.08)',  border: 'rgba(74,222,128,0.3)'  },
+};
+
+// ── Base local de súmulas STF (fallback quando API offline) ─
+const STF_SUMULAS_BASE = [
+  { tipo:'sumula', numero:'11',  tema:'Algemas', tese:'O uso de algemas é exceção, nos casos de violência ou fuga ou de resistência ou de fuga iminente.', relator:'Min. Marco Aurélio', data:'2008', url:'https://jurisprudencia.stf.jus.br' },
+  { tipo:'sumula', numero:'231', tema:'Atenuante abaixo do mínimo', tese:'A incidência da circunstância atenuante não pode conduzir à redução da pena abaixo do mínimo legal.', relator:'', data:'1963', url:'https://jurisprudencia.stf.jus.br' },
+  { tipo:'sumula', numero:'347', tema:'TCU e inconstitucionalidade', tese:'O Tribunal de Contas, no exercício de suas atribuições, pode apreciar a constitucionalidade das leis e dos atos do poder público.', relator:'', data:'1963', url:'https://jurisprudencia.stf.jus.br' },
+  { tipo:'sumula', numero:'379', tema:'Divórcio consensual', tese:'No processo de separação judicial por mútuo consentimento, não tem o juiz o poder de não homologar a partilha amigável dos cônjuges.', relator:'', data:'1964', url:'https://jurisprudencia.stf.jus.br' },
+  { tipo:'sv',     numero:'11',  tema:'Algemas — Súmula Vinculante', tese:'Só é lícito o uso de algemas em casos de resistência e de fundado receio de fuga ou de perigo à integridade física própria ou alheia.', relator:'Min. Marco Aurélio', data:'2008', url:'https://jurisprudencia.stf.jus.br' },
+  { tipo:'sv',     numero:'25',  tema:'Depositário infiel', tese:'É ilícita a prisão civil de depositário infiel, qualquer que seja a modalidade do depósito.', relator:'Min. Gilmar Mendes', data:'2009', url:'https://jurisprudencia.stf.jus.br' },
+  { tipo:'sv',     numero:'37',  tema:'Reajuste de vencimentos', tese:'Não cabe ao Poder Judiciário, que não tem função legislativa, aumentar vencimentos de servidores públicos sob o fundamento de isonomia.', relator:'', data:'2014', url:'https://jurisprudencia.stf.jus.br' },
+  { tipo:'rg',     numero:'660', tema:'Furto simples x qualificado', tese:'Para configuração do furto qualificado pelo rompimento de obstáculo, é necessário que o meio empregado implique destruição ou rompimento do obstáculo.', relator:'Min. Alexandre de Moraes', data:'2019', url:'https://jurisprudencia.stf.jus.br' },
+  { tipo:'rg',     numero:'809', tema:'Sucessão companheiro x cônjuge', tese:'É inconstitucional a distinção de regimes sucessórios entre cônjuges e companheiros prevista no art. 1.790 do CC.', relator:'Min. Luís Roberto Barroso', data:'2017', url:'https://jurisprudencia.stf.jus.br' },
+  { tipo:'rg',     numero:'635', tema:'Porte de drogas para uso próprio', tese:'A criminalização da posse de drogas para consumo pessoal é inconstitucional. Aplicação restrita ao art. 28 da Lei 11.343/06.', relator:'Min. Gilmar Mendes', data:'2024', url:'https://jurisprudencia.stf.jus.br' },
+  { tipo:'acordao',numero:'HC 82.959',  tema:'Progressão de regime — crime hediondo', tese:'Nos crimes hediondos praticados antes da Lei 11.464/2007, é possível a progressão de regime com cumprimento de 1/6 da pena.', relator:'Min. Marco Aurélio', data:'2006', url:'https://jurisprudencia.stf.jus.br' },
+  { tipo:'acordao',numero:'ADI 2591',   tema:'CDC e atividade bancária', tese:'As instituições financeiras estão sujeitas ao Código de Defesa do Consumidor, inclusive quanto aos juros remuneratórios.', relator:'Min. Eros Grau', data:'2006', url:'https://jurisprudencia.stf.jus.br' },
+  { tipo:'acordao',numero:'RE 878.694', tema:'União estável x casamento — herança', tese:'É inconstitucional a distinção de regimes sucessórios entre cônjuges e companheiros (Tema 809 — RG).', relator:'Min. Luís Roberto Barroso', data:'2018', url:'https://jurisprudencia.stf.jus.br' },
+  { tipo:'acordao',numero:'ADI 3.510',  tema:'Pesquisas com células-tronco embrionárias', tese:'São constitucionais as pesquisas com células-tronco embrionárias obtidas de embriões humanos produzidos por fertilização in vitro.', relator:'Min. Ayres Britto', data:'2008', url:'https://jurisprudencia.stf.jus.br' },
+  { tipo:'acordao',numero:'ADPF 635',   tema:'Operações policiais no RJ', tese:'Operações policiais em comunidades durante a pandemia devem respeitar regras constitucionais; proibição durante horário noturno.', relator:'Min. Edson Fachin', data:'2021', url:'https://jurisprudencia.stf.jus.br' },
+];
+
+// ── Motor de busca local STF ──────────────────────────────
+function stfBuscarLocal(tema, tipos = ['acordao','sumula','sv','rg']) {
+  if (!tema) return [];
+  const words = tema.toLowerCase()
+    .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+    .split(/\s+/).filter(w => w.length > 2);
+
+  return STF_SUMULAS_BASE
+    .filter(item => tipos.includes(item.tipo))
+    .map(item => {
+      const haystack = (item.tema + ' ' + item.tese + ' ' + item.numero)
+        .toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+      const score = words.reduce((acc, w) => acc + (haystack.includes(w) ? 1 : 0), 0);
+      return { ...item, _score: score };
+    })
+    .filter(item => item._score > 0)
+    .sort((a, b) => b._score - a._score);
+}
+
+// ── Tenta API do backend — retorna null se offline ────────
+async function stfFetchAPI(endpoint, payload, timeoutMs = 7000) {
+  try {
+    return await lexaiFetch(endpoint, payload, { timeout: timeoutMs, retry: 0 });
+  } catch {
+    return null;
+  }
+}
+
+// ── Render de 1 card STF ──────────────────────────────────
+function stfRenderCard(item, idx) {
+  const tipo = STF_TIPOS[item.tipo] || STF_TIPOS.acordao;
+  const urlBusca = item.url || STF_URLS.busca(item.tema || '');
+  const fromAPI = item._fromAPI ? ` <span style="font-size:9px;background:rgba(74,222,128,0.15);border:1px solid rgba(74,222,128,0.3);padding:1px 7px;border-radius:100px;color:#4ADE80;font-weight:700;vertical-align:middle;">⚡ API Oficial</span>` : '';
+  const fromLocal = !item._fromAPI ? ` <span style="font-size:9px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);padding:1px 7px;border-radius:100px;color:var(--text-muted);font-weight:700;vertical-align:middle;">Base Local</span>` : '';
+
+  return `<div style="
+    background:${tipo.bg};
+    border:1.5px solid ${tipo.border};
+    border-radius:14px;
+    padding:18px 20px;
+    position:relative;
+    animation:fadeIn 0.3s ease;">
+
+    <!-- Tipo badge -->
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;flex-wrap:wrap;">
+      <span style="font-size:18px;">${tipo.icon}</span>
+      <span style="font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:${tipo.cor};">
+        ${tipo.label}${item.numero ? ' ' + item.numero : ''}
+      </span>
+      ${fromAPI}${fromLocal}
+      ${item.data ? `<span style="font-size:11px;color:var(--text-muted);margin-left:auto;">📅 ${item.data}</span>` : ''}
+    </div>
+
+    <!-- Tema -->
+    ${item.tema ? `<div style="font-size:14px;font-weight:600;color:var(--white);margin-bottom:8px;">${item.tema}</div>` : ''}
+
+    <!-- Tese / Enunciado -->
+    <div style="font-size:13px;color:#CBD5E1;line-height:1.75;margin-bottom:12px;font-style:italic;border-left:2px solid ${tipo.border};padding-left:12px;">
+      "${item.tese || item.ementa || ''}"
+    </div>
+
+    <!-- Metadados -->
+    <div style="display:flex;gap:16px;flex-wrap:wrap;margin-bottom:12px;font-size:11px;color:var(--text-muted);">
+      ${item.relator ? `<span>👤 <strong style="color:#9AAFC8;">Rel.:</strong> ${item.relator}</span>` : ''}
+      ${item.classe  ? `<span>📂 ${item.classe}</span>` : ''}
+    </div>
+
+    <!-- Botões de ação -->
+    <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
+      <a href="${urlBusca}" target="_blank" rel="noopener"
+        style="display:inline-flex;align-items:center;gap:6px;background:${tipo.bg};border:1px solid ${tipo.border};border-radius:8px;padding:7px 14px;font-size:12px;font-weight:700;color:${tipo.cor};text-decoration:none;">
+        🔗 Abrir no STF
+      </a>
+      <button onclick="centralEnviarParaVerificador('stfCard_${idx}')"
+        style="display:inline-flex;align-items:center;gap:6px;background:rgba(201,162,39,0.1);border:1px solid rgba(201,162,39,0.3);border-radius:8px;padding:7px 14px;font-size:12px;font-weight:700;color:var(--gold-light);cursor:pointer;font-family:'DM Sans',sans-serif;">
+        🔬 Verificador
+      </button>
+    </div>
+
+    <!-- Texto oculto para o Verificador -->
+    <div id="stfCard_${idx}" style="display:none;">
+      ${tipo.label} ${item.numero || ''}: ${item.tema || ''}.
+      ${item.tese || item.ementa || ''}.
+      ${item.relator ? 'Relator: ' + item.relator + '.' : ''}
+      ${item.data ? 'Data: ' + item.data + '.' : ''}
+      STF — Supremo Tribunal Federal.
+    </div>
+  </div>`;
+}
+
+// ── Render de seção de resultados STF ─────────────────────
+function stfRenderSecao(titulo, items, cor) {
+  if (!items || items.length === 0) return '';
+  return `
+    <div style="margin-bottom:8px;">
+      <div style="font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:${cor};margin-bottom:10px;padding:8px 14px;background:rgba(255,255,255,0.03);border-radius:8px;border-left:3px solid ${cor};">
+        ${titulo} <span style="opacity:0.6;">(${items.length})</span>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:10px;">
+        ${items.map((item, i) => stfRenderCard(item, titulo.replace(/\s/g,'') + i)).join('')}
+      </div>
+    </div>`;
+}
+
+// ── Consulta STF completa (API + fallback local) ──────────
+async function stfBuscarCompleto(tema) {
+  const resultados = { acordaos:[], sumulas:[], sv:[], rg:[], processos:[], fonte:'local' };
+
+  // 1. Tenta API do backend
+  const apiData = await stfFetchAPI('/api/stf', { query: tema, tipos: ['acordao','sumula','sv','rg'] });
+
+  if (apiData && (apiData.acordaos || apiData.sumulas || apiData.sv || apiData.rg)) {
+    resultados.fonte = 'api';
+    resultados.acordaos  = (apiData.acordaos  || []).map(r => ({ ...r, tipo:'acordao',  _fromAPI: true }));
+    resultados.sumulas   = (apiData.sumulas   || []).map(r => ({ ...r, tipo:'sumula',   _fromAPI: true }));
+    resultados.sv        = (apiData.sv        || []).map(r => ({ ...r, tipo:'sv',        _fromAPI: true }));
+    resultados.rg        = (apiData.rg        || []).map(r => ({ ...r, tipo:'rg',        _fromAPI: true }));
+    return resultados;
+  }
+
+  // 2. Tenta unified-search
+  const unifiedData = await stfFetchAPI('/api/unified-search', { type: 'tema', query: tema, tribunal: 'STF' });
+  if (unifiedData && (unifiedData.hits || unifiedData.results)) {
+    const hits = unifiedData.hits || unifiedData.results || [];
+    hits.forEach(h => {
+      const item = { ...h, _fromAPI: true };
+      const t = (h.tipo || '').toLowerCase();
+      if (t.includes('sumula_vinculante') || t.includes('sv')) resultados.sv.push({ ...item, tipo:'sv' });
+      else if (t.includes('sumula')) resultados.sumulas.push({ ...item, tipo:'sumula' });
+      else if (t.includes('repercussao') || t.includes('rg')) resultados.rg.push({ ...item, tipo:'rg' });
+      else resultados.acordaos.push({ ...item, tipo:'acordao' });
+    });
+    if (hits.length > 0) { resultados.fonte = 'unified'; return resultados; }
+  }
+
+  // 3. Fallback: base local
+  const local = stfBuscarLocal(tema);
+  local.forEach(item => {
+    if (item.tipo === 'sumula')  resultados.sumulas.push(item);
+    else if (item.tipo === 'sv') resultados.sv.push(item);
+    else if (item.tipo === 'rg') resultados.rg.push(item);
+    else                          resultados.acordaos.push(item);
+  });
+  return resultados;
+}
+
+// ── consulta processo no DataJud STF ─────────────────────
+async function stfConsultarProcesso(numeroCNJ) {
+  const parsed = djParseNumero(numeroCNJ);
+  if (!parsed || parsed.fora_de_escopo) return null;
+
+  // Usa o Cloudflare Worker como proxy (já tem Authorization)
+  try {
+    const resp = await fetch(parsed.endpoint, {
+      method:  'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body:    JSON.stringify({ query: { match: { numeroProcesso: parsed.numeroLimpo } } }),
+      signal:  AbortSignal.timeout(12000),
+    });
+    if (!resp.ok) throw new Error('HTTP ' + resp.status);
+    const data = await resp.json();
+    const hits = data?.hits?.hits || [];
+    return hits.length > 0
+      ? { found: true,  hits, fonte: 'DataJud/CNJ — STF' }
+      : { found: false };
+  } catch {
+    return { found: false, error: true };
+  }
+}
+
+// ── Render resultado de processo STF ─────────────────────
+function stfRenderProcesso(resultado, numeroCNJ) {
+  if (!resultado || !resultado.found) {
+    return `<div style="padding:16px;background:rgba(251,191,36,0.08);border:1px solid rgba(251,191,36,0.3);border-radius:12px;font-size:13px;color:#FCD34D;line-height:1.7;">
+      <strong>⚠️ Processo não localizado no DataJud/STF.</strong><br>
+      O número <code style="font-family:monospace;color:var(--gold);">${numeroCNJ}</code> não foi encontrado na base do Supremo Tribunal Federal.
+      Isso não indica necessariamente que o processo seja falso — pode não estar indexado ainda.
+      <div style="margin-top:10px;">
+        <a href="https://portal.stf.jus.br/processos/listarProcessos.asp?classe=&numeroProcesso=${encodeURIComponent(numeroCNJ)}" target="_blank" rel="noopener"
+          style="display:inline-flex;align-items:center;gap:6px;background:rgba(251,191,36,0.15);border:1px solid rgba(251,191,36,0.4);border-radius:7px;padding:7px 14px;font-size:12px;font-weight:700;color:#F59E0B;text-decoration:none;">
+          🔗 Verificar no Portal STF
+        </a>
+      </div>
+    </div>`;
+  }
+
+  const hit = resultado.hits[0]?._source || resultado.hits[0] || {};
+  return `<div style="background:rgba(74,222,128,0.08);border:2px solid rgba(74,222,128,0.4);border-radius:14px;padding:18px 20px;">
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;">
+      <span style="font-size:22px;">📁</span>
+      <div>
+        <div style="font-size:14px;font-weight:700;color:#4ADE80;">Processo localizado no DataJud/STF</div>
+        <div style="font-size:11px;color:rgba(74,222,128,0.6);">Fonte: ${resultado.fonte} · ${new Date().toLocaleDateString('pt-BR')}</div>
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;">
+      ${hit.classe?.nome   ? `<div style="background:rgba(0,0,0,0.2);border-radius:8px;padding:10px;"><div style="font-size:9px;color:rgba(74,222,128,0.6);text-transform:uppercase;letter-spacing:1px;margin-bottom:3px;">Classe</div><div style="font-size:12px;color:var(--white);">${hit.classe.nome}</div></div>` : ''}
+      ${hit.orgaoJulgador?.nome ? `<div style="background:rgba(0,0,0,0.2);border-radius:8px;padding:10px;"><div style="font-size:9px;color:rgba(74,222,128,0.6);text-transform:uppercase;letter-spacing:1px;margin-bottom:3px;">Órgão</div><div style="font-size:12px;color:var(--white);">${hit.orgaoJulgador.nome}</div></div>` : ''}
+    </div>
+    <a href="https://portal.stf.jus.br/processos/listarProcessos.asp?classe=&numeroProcesso=${encodeURIComponent(numeroCNJ)}" target="_blank" rel="noopener"
+      style="display:inline-flex;align-items:center;gap:6px;background:rgba(74,222,128,0.12);border:1px solid rgba(74,222,128,0.4);border-radius:8px;padding:7px 14px;font-size:12px;font-weight:700;color:#4ADE80;text-decoration:none;">
+      🔗 Abrir no Portal STF
+    </a>
+  </div>`;
+}
+
+// =========================================================
+// CENTRAL BUSCAR — atualizada com módulo STF
+// =========================================================
 async function centralBuscar() {
   const tema = (document.getElementById('centralBuscaTema').value || '').trim();
   const trib = document.getElementById('centralBuscaTrib').value;
-  const qtd  = 2;
   if (!tema) { document.getElementById('centralBuscaTema').focus(); return; }
 
-  const btn = document.getElementById('centralBuscaBtn');
+  const btn  = document.getElementById('centralBuscaBtn');
   const icon = document.getElementById('centralBuscaIcon');
-  const txt = document.getElementById('centralBuscaTxt');
+  const txt  = document.getElementById('centralBuscaTxt');
   btn.disabled = true; icon.textContent = '⏳'; txt.textContent = 'Buscando...';
   document.getElementById('centralBuscaLoading').classList.add('show');
   document.getElementById('centralBuscaResult').style.display = 'none';
 
-  await new Promise(r => setTimeout(r, 900 + Math.random() * 600));
+  // ── Detecta se é número CNJ ──
+  const cnjMatch = tema.match(/^\d{7}-\d{2}\.\d{4}\.1\.\d{2}\.\d{4}$/);
 
-  const teses = encontrarTeses(tema, trib, qtd);
-  const html  = teses.map((t, i) => {
-    const texto = formatarJurisprudencia(t, trib, i);
-    const id = 'cBusca_' + i;
-    return `<div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:14px;padding:20px 22px;">
-      <div style="font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--gold);margin-bottom:10px;">
-        🏛 ${trib === 'qualquer' ? 'STF / STJ / TST' : trib} — Jurisprudência ${i+1}
-      </div>
-      <div id="${id}" style="font-size:13px;color:#CBD5E1;line-height:1.8;margin-bottom:14px;font-style:italic;">${texto.trim().replace(/\n/g,'<br>')}</div>
-      <div style="display:flex;gap:8px;flex-wrap:wrap;">
-        <button onclick="centralEnviarParaVerificador('${id}')"
-          style="display:inline-flex;align-items:center;gap:6px;background:rgba(201,162,39,0.15);border:1px solid var(--gold);border-radius:8px;padding:7px 14px;font-size:12px;font-weight:700;color:var(--gold-light);cursor:pointer;font-family:'DM Sans',sans-serif;">
-          🔬 Analisar no Verificador
-        </button>
-        ${botoesVerificacao(texto.match(/\d{7}-\d{2}\.\d{4}\.\d\.\d{2,3}\.\d{4}/)?.[0] || '', trib)}
-      </div>
-    </div>`;
-  }).join('');
+  let html = '';
+
+  if (cnjMatch || trib === 'STF') {
+    if (cnjMatch) {
+      // Consulta processo STF via DataJud
+      const resultado = await stfConsultarProcesso(tema);
+      html = `
+        <div style="font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:rgba(74,222,128,0.8);margin-bottom:12px;padding:8px 14px;background:rgba(74,222,128,0.05);border-radius:8px;">
+          📁 Consulta Processual — STF / DataJud
+        </div>
+        ${stfRenderProcesso(resultado, tema)}`;
+    } else {
+      // Busca jurisprudencial STF por tema
+      const stfResult = await stfBuscarCompleto(tema);
+      const fonteLabel = stfResult.fonte === 'api' ? '⚡ API Oficial'
+        : stfResult.fonte === 'unified' ? '⚡ Unified Search'
+        : '📚 Base Local';
+      const total = stfResult.acordaos.length + stfResult.sumulas.length + stfResult.sv.length + stfResult.rg.length;
+
+      html = `
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:8px;">
+          <div style="font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#93C5FD;">
+            🔵 Resultados STF — "${tema}"
+          </div>
+          <div style="font-size:11px;color:var(--text-muted);">
+            ${total} resultado(s) · <span style="color:var(--gold-light);">${fonteLabel}</span>
+          </div>
+        </div>
+        <div style="font-size:11px;color:rgba(255,255,255,0.5);padding:8px 14px;background:rgba(255,255,255,0.03);border-radius:8px;margin-bottom:14px;">
+          ℹ️ Os resultados abaixo são separados por categoria.
+          "Acórdão localizado" ≠ "Processo localizado" — não confunda as fontes.
+        </div>
+        ${stfRenderSecao('⚖️ Acórdãos STF', stfResult.acordaos, '#93C5FD')}
+        ${stfRenderSecao('📋 Súmulas STF', stfResult.sumulas, '#4ADE80')}
+        ${stfRenderSecao('🔒 Súmulas Vinculantes', stfResult.sv, '#F59E0B')}
+        ${stfRenderSecao('🔵 Repercussão Geral', stfResult.rg, '#C4B5FD')}
+        ${total === 0 ? `<div style="text-align:center;padding:32px;color:var(--text-muted);font-size:13px;">Nenhum resultado encontrado para "<strong style="color:var(--white);">${tema}</strong>" no STF.<br>
+          <a href="${STF_URLS.busca(tema)}" target="_blank" rel="noopener" style="color:var(--gold);font-weight:700;margin-top:12px;display:inline-block;">🔗 Pesquisar diretamente no STF →</a></div>` : ''}`;
+    }
+  } else {
+    // Busca mista (não-STF ou qualquer)
+    await new Promise(r => setTimeout(r, 700 + Math.random() * 400));
+    const qtd = 2;
+    const teses = encontrarTeses(tema, trib, qtd);
+
+    // Se tribunal é 'qualquer' ou não especificado, inclui resultados STF também
+    let stfHtml = '';
+    if (trib === 'qualquer' || !trib) {
+      const stfResult = await stfBuscarCompleto(tema);
+      const totalSTF = stfResult.acordaos.length + stfResult.sumulas.length + stfResult.sv.length + stfResult.rg.length;
+      if (totalSTF > 0) {
+        stfHtml = `
+          <div style="margin-top:20px;border-top:1px solid rgba(255,255,255,0.07);padding-top:18px;">
+            <div style="font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#93C5FD;margin-bottom:12px;">
+              🔵 Resultados STF encontrados
+            </div>
+            ${stfRenderSecao('⚖️ Acórdãos', stfResult.acordaos.slice(0,2), '#93C5FD')}
+            ${stfRenderSecao('📋 Súmulas', stfResult.sumulas.slice(0,2), '#4ADE80')}
+            ${stfRenderSecao('🔒 Súmulas Vinculantes', stfResult.sv.slice(0,2), '#F59E0B')}
+            ${stfRenderSecao('🔵 Repercussão Geral', stfResult.rg.slice(0,2), '#C4B5FD')}
+          </div>`;
+      }
+    }
+
+    const localHtml = teses.map((t, i) => {
+      const texto = formatarJurisprudencia(t, trib, i);
+      const id = 'cBusca_' + i;
+      return `<div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:14px;padding:20px 22px;">
+        <div style="font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--gold);margin-bottom:10px;">
+          🏛 ${trib === 'qualquer' ? 'STF / STJ / TST' : trib} — Jurisprudência ${i+1}
+        </div>
+        <div id="${id}" style="font-size:13px;color:#CBD5E1;line-height:1.8;margin-bottom:14px;font-style:italic;">${texto.trim().replace(/\n/g,'<br>')}</div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;">
+          <button onclick="centralEnviarParaVerificador('${id}')"
+            style="display:inline-flex;align-items:center;gap:6px;background:rgba(201,162,39,0.15);border:1px solid var(--gold);border-radius:8px;padding:7px 14px;font-size:12px;font-weight:700;color:var(--gold-light);cursor:pointer;font-family:'DM Sans',sans-serif;">
+            🔬 Analisar no Verificador
+          </button>
+          ${botoesVerificacao(texto.match(/\d{7}-\d{2}\.\d{4}\.\d\.\d{2,3}\.\d{4}/)?.[0] || '', trib)}
+        </div>
+      </div>`;
+    }).join('');
+
+    html = localHtml + stfHtml;
+  }
 
   document.getElementById('centralBuscaLoading').classList.remove('show');
   const res = document.getElementById('centralBuscaResult');
-  res.innerHTML = html;
+  res.innerHTML = html || '<div style="text-align:center;padding:32px;color:var(--text-muted);">Nenhum resultado encontrado. Tente outro tema.</div>';
   res.style.display = 'flex';
-
   btn.disabled = false; icon.textContent = '✨'; txt.textContent = 'Buscar';
 }
 
@@ -7967,13 +8368,17 @@ window.lexAIState = {
 };
 
 // ── URLs do backend já existente ───────────────────────────
+// ── URL BASE: Cloudflare Worker (todas as rotas passam por aqui) ──
+// DataJud, STF, unified-search — mesma origem, sem CORS issues
+const LEXAI_WORKER = 'https://misty-hall-12d1.fernanda-gab-abranches.workers.dev';
+
 const LEXAI_API = {
-  base:          'http://127.0.0.1:8000',
-  unified:       '/api/unified-search',
-  datajud:       '/api/datajud',
-  tjsp:          '/api/tjsp',
-  tst:           '/api/tst',
-  stf:           '/api/stf',
+  base:    LEXAI_WORKER,
+  unified: '/api/unified-search',
+  datajud: '/api/datajud',
+  tjsp:    '/api/tjsp',
+  tst:     '/api/tst',
+  stf:     '/api/stf',
 };
 
 // ── Cache local anti-duplicatas ─────────────────────────────
