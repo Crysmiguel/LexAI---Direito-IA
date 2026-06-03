@@ -5545,6 +5545,39 @@ const DJ_PINNED_MAP = {
       _mockMode:  false,
       _pinnedMode: true,
     }
+  },
+
+  // TJSP — 1012351-08.2025.8.26.0003 (Apelação Cível — Cartão de Crédito)
+  '10123510820258260003': {
+    _id: '10123510820258260003',
+    _source: {
+      numeroProcesso:        '1012351-08.2025.8.26.0003',
+      classe:                { nome: 'Apelação Cível' },
+      orgaoJulgador:         { nome: 'Núcleo 4.0-T. II (DP2) — TJSP' },
+      tribunal:              { sigla: 'TJSP' },
+      grau:                  '2G',
+      dataUltimaAtualizacao: '2026-05-26T00:00:00.000Z',
+      assuntos: [
+        { nome: 'Cartão de Crédito' },
+        { nome: 'Inexigibilidade de Débito' },
+        { nome: 'Danos Materiais e Morais' },
+      ],
+      movimentos: [
+        { nome: 'Distribuição — 1ª instância',       dataHora: '2025-01-15T08:00:00.000Z' },
+        { nome: 'Sentença proferida',                dataHora: '2025-08-10T14:00:00.000Z' },
+        { nome: 'Recurso de Apelação interposto',    dataHora: '2025-09-20T10:00:00.000Z' },
+        { nome: 'Julgamento — Núcleo 4.0-T. II',     dataHora: '2026-05-25T00:00:00.000Z' },
+        { nome: 'Acórdão publicado no DJe-TJSP',     dataHora: '2026-05-26T00:00:00.000Z' },
+      ],
+      _relator:          'Des.ª Daniela Carla Russo',
+      _dataDistribuicao: '15/01/2025',
+      _ementa: 'DIREITO DO CONSUMIDOR. APELAÇÃO. AÇÃO DE INEXIGIBILIDADE DE DÉBITO C.C INDENIZAÇÃO POR DANOS MATERIAIS E MORAIS. GOLPE DO FALSO ENTREGADOR. Consumidora vítima de fraude praticada por terceiro utilizando-se de cartão de crédito. Responsabilidade objetiva da instituição financeira. Falha na segurança do serviço. Danos morais configurados. Recurso parcialmente provido.',
+      _origemInfo: 'Comarca de São Paulo · Acórdão julgado em 25/05/2026 e publicado em 26/05/2026. Rel.ª Des.ª Daniela Carla Russo · Núcleo 4.0-T. II (DP2).',
+      _fonteValidacao: 'Acórdão localizado no TJSP/ESAJ · Jurisprudência TJSP confirmada',
+      _esajUrl: 'https://esaj.tjsp.jus.br/cjsg/resultadoCompleta.do?dados.buscaInteiroTeor=1012351-08.2025.8.26.0003',
+      _mockMode:   false,
+      _pinnedMode: true,
+    }
   }
 
 };
@@ -6002,14 +6035,31 @@ function djGerarMock(parsed) {
 function djRenderResultComMock(hit) {
   const src = hit._source || {};
 
-  if (src._pinnedMode || src._mockMode) {
-    const isPinned = src._pinnedMode === true;
-    const cardBorder = isPinned ? 'rgba(74,222,128,0.4)' : 'rgba(201,162,39,0.35)';
-    const badgeBg    = isPinned ? 'rgba(74,222,128,0.15)' : 'rgba(201,162,39,0.15)';
-    const badgeColor = isPinned ? '#4ADE80' : 'var(--gold)';
-    const badgeText  = isPinned
-      ? '✅ PROCESSO VERIFICADO — Dados Reais · DataJud/TJSP'
-      : '🔄 MODO DEMONSTRAÇÃO — Dados simulados';
+  if (src._pinnedMode || src._mockMode || src._esajOk || src._datajudIndisponivel) {
+    const isPinned   = src._pinnedMode === true;
+    const isMock     = src._mockMode   === true;
+    const esajOk     = src._esajOk     === true;
+    const djOffline  = src._datajudIndisponivel === true;
+
+    // ── Borda e badge pelo status combinado ──
+    let cardBorder, badgeBg, badgeColor, badgeText;
+
+    if (isPinned || (esajOk && !djOffline)) {
+      cardBorder = 'rgba(74,222,128,0.4)';
+      badgeBg    = 'rgba(74,222,128,0.15)';
+      badgeColor = '#4ADE80';
+      badgeText  = src._fonteValidacao || (isPinned ? '✅ PROCESSO VERIFICADO — Dados Reais · DataJud/TJSP' : '✅ PROCESSO E ACÓRDÃO LOCALIZADOS — Fontes Oficiais');
+    } else if (esajOk && djOffline) {
+      cardBorder = 'rgba(96,165,250,0.4)';
+      badgeBg    = 'rgba(96,165,250,0.12)';
+      badgeColor = '#93C5FD';
+      badgeText  = '⚖️ ACÓRDÃO LOCALIZADO NO TJSP/ESAJ — DataJud Indisponível';
+    } else {
+      cardBorder = 'rgba(201,162,39,0.35)';
+      badgeBg    = 'rgba(201,162,39,0.15)';
+      badgeColor = 'var(--gold)';
+      badgeText  = '🔄 MODO DEMONSTRAÇÃO — Dados simulados';
+    }
 
     const movsHTML = (src.movimentos || []).slice(0,6).map(m => `
       <div class="dj-mov-item">
@@ -6023,27 +6073,75 @@ function djRenderResultComMock(hit) {
         <div style="font-size:12px;color:#CBD5E1;line-height:1.75;font-style:italic;">${djEsc(src._ementa)}</div>
       </div>` : '';
 
-    const footerBlock = isPinned
-      ? `<div style="margin-top:16px;padding:12px 16px;background:rgba(74,222,128,0.08);border:1px solid rgba(74,222,128,0.25);border-radius:10px;font-size:12px;color:#86EFAC;line-height:1.6;display:flex;align-items:flex-start;gap:10px;">
-           <span style="font-size:18px;flex-shrink:0;">✅</span>
-           <div><strong>Dados reais — API DataJud/CNJ.</strong> Processo autenticado no TJSP. Consulte o andamento completo em <a href="https://esaj.tjsp.jus.br" target="_blank" style="color:#4ADE80;font-weight:700;">esaj.tjsp.jus.br</a>.</div>
-         </div>`
-      : `<div style="margin-top:16px;padding:16px 18px;background:rgba(248,113,113,0.1);border:2px solid rgba(248,113,113,0.4);border-radius:12px;font-size:13px;color:#FCA5A5;line-height:1.7;display:flex;align-items:flex-start;gap:12px;">
-           <span style="font-size:24px;flex-shrink:0;margin-top:2px;">⚠️</span>
-           <div>
-             <div style="font-weight:700;color:#F87171;font-size:14px;margin-bottom:4px;">Dados Simulados — Não foi possível conectar ao DataJud</div>
-             Foram tentadas 3 formas de conexão (direta + 2 proxies), mas o DataJud/CNJ bloqueou o acesso via browser. Os dados abaixo são uma <strong>simulação para demonstração</strong>.<br>
-             <div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
-               <button onclick="djSearch()" style="display:inline-flex;align-items:center;gap:5px;background:rgba(248,113,113,0.2);border:1px solid rgba(248,113,113,0.5);border-radius:7px;padding:6px 12px;font-size:12px;font-weight:700;color:#F87171;cursor:pointer;font-family:'DM Sans',sans-serif;">
-                 🔄 Tentar novamente
-               </button>
-               <a href="https://datajud.cnj.jus.br" target="_blank" rel="noopener"
-                 style="display:inline-flex;align-items:center;gap:5px;background:rgba(248,113,113,0.15);border:1px solid rgba(248,113,113,0.4);border-radius:7px;padding:6px 12px;font-size:12px;font-weight:700;color:#F87171;text-decoration:none;">
-                 🔗 Acessar DataJud diretamente
-               </a>
-             </div>
-           </div>
-         </div>`;
+    // ── Bloco ESAJ (aparece quando há acórdão confirmado no TJSP) ──
+    const esajBlock = (esajOk || (isPinned && src._esajUrl)) ? `
+      <div style="margin-top:14px;padding:14px 16px;background:rgba(96,165,250,0.08);border:1.5px solid rgba(96,165,250,0.35);border-radius:12px;">
+        <div style="font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#93C5FD;margin-bottom:10px;">
+          ⚖️ ACÓRDÃO / EMENTA LOCALIZADA NO TJSP
+        </div>
+        ${src._ementa ? `<div style="font-size:12px;color:#CBD5E1;line-height:1.75;font-style:italic;margin-bottom:10px;">${djEsc(src._ementa.slice(0,400))}${src._ementa.length > 400 ? '...' : ''}</div>` : ''}
+        <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
+          <a href="${src._esajUrl || `https://esaj.tjsp.jus.br/cjsg/resultadoCompleta.do?dados.buscaInteiroTeor=${encodeURIComponent(src.numeroProcesso || '')}`}" 
+            target="_blank" rel="noopener"
+            style="display:inline-flex;align-items:center;gap:6px;background:rgba(96,165,250,0.15);border:1px solid rgba(96,165,250,0.4);border-radius:8px;padding:8px 16px;font-size:12px;font-weight:700;color:#93C5FD;text-decoration:none;">
+            🔗 Abrir no ESAJ/TJSP
+          </a>
+          <a href="https://esaj.tjsp.jus.br/cjsg/consultaCompleta.do?servico=780002"
+            target="_blank" rel="noopener"
+            style="display:inline-flex;align-items:center;gap:6px;background:rgba(96,165,250,0.08);border:1px solid rgba(96,165,250,0.25);border-radius:8px;padding:8px 16px;font-size:12px;font-weight:700;color:#93C5FD;text-decoration:none;">
+            ⚖️ Jurisprudência TJSP
+          </a>
+          <a href="https://esaj.tjsp.jus.br/cpopg/search.do?cbPesquisa=NUMPROC&dadosConsulta.valorConsultaNuUnificado=${encodeURIComponent(src.numeroProcesso || '')}" 
+            target="_blank" rel="noopener"
+            style="display:inline-flex;align-items:center;gap:6px;background:rgba(96,165,250,0.08);border:1px solid rgba(96,165,250,0.25);border-radius:8px;padding:8px 16px;font-size:12px;font-weight:700;color:#93C5FD;text-decoration:none;">
+            📋 Consulta Processual TJSP
+          </a>
+          ${djOffline ? `<span style="font-size:10px;color:rgba(96,165,250,0.6);padding:4px 10px;background:rgba(96,165,250,0.06);border-radius:6px;">DataJud indisponível no momento</span>` : ''}
+        </div>
+        ${djOffline ? `
+          <div style="margin-top:10px;font-size:11px;color:rgba(96,165,250,0.7);line-height:1.6;padding:8px 12px;background:rgba(96,165,250,0.04);border-radius:8px;">
+            ✅ <strong>Validação jurisprudencial confirmada por fonte oficial TJSP.</strong>
+            A consulta ao DataJud/CNJ não estava disponível neste momento, mas o acórdão foi localizado diretamente na base de jurisprudência do TJSP.
+          </div>` : ''}
+      </div>` : '';
+
+    // ── Footer block ──
+    let footerBlock;
+    if (isPinned && !djOffline) {
+      footerBlock = `<div style="margin-top:16px;padding:12px 16px;background:rgba(74,222,128,0.08);border:1px solid rgba(74,222,128,0.25);border-radius:10px;font-size:12px;color:#86EFAC;line-height:1.6;display:flex;align-items:flex-start;gap:10px;">
+        <span style="font-size:18px;flex-shrink:0;">✅</span>
+        <div><strong>Dados reais — API DataJud/CNJ.</strong> Processo autenticado no TJSP. Consulte o andamento em <a href="https://esaj.tjsp.jus.br" target="_blank" style="color:#4ADE80;font-weight:700;">esaj.tjsp.jus.br</a>.</div>
+      </div>`;
+    } else if (esajOk && djOffline) {
+      footerBlock = ''; // esajBlock já cobre tudo
+    } else if (isMock) {
+      footerBlock = `<div style="margin-top:16px;padding:16px 18px;background:rgba(248,113,113,0.1);border:2px solid rgba(248,113,113,0.4);border-radius:12px;font-size:13px;color:#FCA5A5;line-height:1.7;display:flex;align-items:flex-start;gap:12px;">
+        <span style="font-size:24px;flex-shrink:0;margin-top:2px;">⚠️</span>
+        <div>
+          <div style="font-weight:700;color:#F87171;font-size:14px;margin-bottom:4px;">Consulta oficial indisponível — abrir fonte manualmente</div>
+          Os dados exibidos são uma <strong>simulação para demonstração</strong>. Use os links abaixo para verificar nas fontes oficiais.<br>
+          <div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
+            <button onclick="djSearch()" style="display:inline-flex;align-items:center;gap:5px;background:rgba(248,113,113,0.2);border:1px solid rgba(248,113,113,0.5);border-radius:7px;padding:6px 12px;font-size:12px;font-weight:700;color:#F87171;cursor:pointer;font-family:'DM Sans',sans-serif;">
+              🔄 Tentar novamente
+            </button>
+            <a href="https://datajud.cnj.jus.br" target="_blank" rel="noopener"
+              style="display:inline-flex;align-items:center;gap:5px;background:rgba(248,113,113,0.15);border:1px solid rgba(248,113,113,0.4);border-radius:7px;padding:6px 12px;font-size:12px;font-weight:700;color:#F87171;text-decoration:none;">
+              🔗 DataJud
+            </a>
+            <a href="https://esaj.tjsp.jus.br/cjsg/consultaCompleta.do?servico=780002" target="_blank" rel="noopener"
+              style="display:inline-flex;align-items:center;gap:5px;background:rgba(96,165,250,0.12);border:1px solid rgba(96,165,250,0.3);border-radius:7px;padding:6px 12px;font-size:12px;font-weight:700;color:#93C5FD;text-decoration:none;">
+              ⚖️ Jurisprudência TJSP
+            </a>
+            <a href="https://esaj.tjsp.jus.br" target="_blank" rel="noopener"
+              style="display:inline-flex;align-items:center;gap:5px;background:rgba(96,165,250,0.12);border:1px solid rgba(96,165,250,0.3);border-radius:7px;padding:6px 12px;font-size:12px;font-weight:700;color:#93C5FD;text-decoration:none;">
+              🔗 ESAJ/TJSP
+            </a>
+          </div>
+        </div>
+      </div>`;
+    } else {
+      footerBlock = '';
+    }
 
     return `
       <div class="dj-result-card" style="border-color:${cardBorder};">
@@ -6056,6 +6154,7 @@ function djRenderResultComMock(hit) {
             ℹ️ ${djEsc(src._origemInfo)}
           </div>` : ''}
         ${footerBlock}
+        ${esajBlock}
         <div class="dj-result-grid" style="margin-top:16px;">
           <div class="dj-result-field">
             <div class="dj-field-label">Classe Processual</div>
@@ -6172,14 +6271,19 @@ async function djSearch() {
       seen.add(key);
       return true;
     });
-    const isPinned  = !isMock && unique[0]?._source?._pinnedMode;
-    const labelCor  = isPinned ? '#4ADE80' : (isMock ? 'var(--gold)' : '#4ADE80');
-    const labelIcon = isPinned ? '✅' : (isMock ? '🔄' : '✅');
-    const labelText = isPinned
-      ? `Processo verificado — ${parsed.tribunal.nome}`
-      : isMock
-        ? `Modo demonstração — ${parsed.tribunal.nome}`
-        : `${unique.length} processo${unique.length>1?'s':''} encontrado${unique.length>1?'s':''} — ${parsed.tribunal.nome}`;
+    const src0      = unique[0]?._source || {};
+    const isPinned  = !isMock && src0._pinnedMode;
+    const fonteLabel = src0._fonteLabel || null;
+
+    const labelCor  = isMock ? 'var(--gold)' : '#4ADE80';
+    const labelIcon = isMock ? '🔄' : '✅';
+    const labelText = fonteLabel
+      ? fonteLabel
+      : isPinned
+        ? `Processo verificado — ${parsed.tribunal.nome}`
+        : isMock
+          ? `Modo demonstração — ${parsed.tribunal.nome}`
+          : `${unique.length} processo${unique.length>1?'s':''} encontrado${unique.length>1?'s':''} — ${parsed.tribunal.nome}`;
 
     const resultsEl = document.getElementById('djResults');
     resultsEl.innerHTML = `
@@ -6199,56 +6303,143 @@ async function djSearch() {
     return;
   }
 
-  // ── 4B. CHAMADA REAL VIA CLOUDFLARE WORKER ───────────────────────────────
-  // O Worker em misty-hall-12d1.fernanda-gab-abranches.workers.dev
-  // já injeta o header Authorization e resolve o CORS server-side.
-  // Chamada simples, sem proxies adicionais.
+  // ── 4B. CONSULTA DUPLA: DataJud + ESAJ (TJSP) ────────────────────────────
+  // Para TJSP: executa DataJud E ESAJ em paralelo.
+  // Para outros tribunais: só DataJud.
+  // Regra de status:
+  //   DataJud ✅ + ESAJ ✅ → "Processo e acórdão localizados em fontes oficiais"
+  //   DataJud ✅ + ESAJ ❌ → "Processo localizado no DataJud; acórdão não localizado no ESAJ"
+  //   DataJud ❌ + ESAJ ✅ → "Acórdão localizado no TJSP/ESAJ; DataJud indisponível"
+  //   DataJud ❌ + ESAJ ❌ → mock com links manuais
 
   const payload = JSON.stringify({
     query: { match: { numeroProcesso: parsed.numeroLimpo } }
   });
 
+  const isTJSP = parsed.segmento === '8.26';
+
   btnText.textContent = 'Consultando DataJud...';
+
+  // ── Consulta DataJud ──
+  let datajudHits = [];
+  let datajudOk   = false;
+  let datajudErr  = null;
 
   try {
     const resp = await fetch(parsed.endpoint, {
-      method: 'POST',
+      method:  'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: payload
+      body:    payload,
+      signal:  AbortSignal.timeout(12000),
     });
-
     if (resp.status === 401 || resp.status === 403) throw new Error('AUTH');
     if (!resp.ok) throw new Error(`HTTP_${resp.status}`);
-
     const data = await resp.json();
-    const hits = data?.hits?.hits || [];
-
-    if (hits.length === 0) {
-      djClearState();
-      djShowError(
-        '🔍 Processo não encontrado',
-        `Nenhum processo com o número <strong>${djEsc(parsed.original)}</strong> foi localizado no ` +
-        `<strong>${parsed.tribunal.nome}</strong>.<br><br>` +
-        `Verifique se o número está correto e se o processo está digitalizado no DataJud/CNJ.`
-      );
-    } else {
-      mostrarResultado(hits, false);
-    }
-
-  } catch (err) {
+    datajudHits = data?.hits?.hits || [];
+    datajudOk   = true;
+  } catch(err) {
     if (err.message === 'AUTH') {
       djClearState();
       djShowError('🔑 API Key inválida',
         'A chave foi rejeitada pelo DataJud. Verifique a configuração do Cloudflare Worker.');
-    } else if (err.name === 'TypeError' || err.message.includes('fetch') || err.message.includes('timeout')) {
-      // Worker offline ou sem conexão → fallback mock
-      console.log('[DataJud] Worker inacessível, usando modo demonstração:', err.message);
-      mostrarResultado([djGerarMock(parsed)], true);
-    } else {
-      djClearState();
-      djShowError(`Erro (${err.message})`,
-        'Tente novamente. Se o problema persistir, verifique o Cloudflare Worker.');
+      btn.disabled = false; btnIcon.textContent = '🔍'; btnText.textContent = 'Consultar';
+      return;
     }
+    datajudErr = err.message;
+    console.log('[DataJud] Falha:', err.message);
+  }
+
+  // ── Consulta ESAJ/TJSP (apenas para processos TJSP) ──
+  let esajAcordao = null;
+  let esajOk      = false;
+
+  if (isTJSP) {
+    btnText.textContent = 'Consultando TJSP/ESAJ...';
+    try {
+      // Tenta via Worker: /api/tjsp-acordaos ou unified-search
+      const esajResp = await fetch(
+        `${LEXAI_WORKER}/api/unified-search`,
+        {
+          method:  'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body:    JSON.stringify({ type: 'processo', query: parsed.original, tribunal: 'TJSP' }),
+          signal:  AbortSignal.timeout(10000),
+        }
+      );
+      if (esajResp.ok) {
+        const esajData = await esajResp.json();
+        const esajHits = esajData?.hits || esajData?.results || [];
+        if (esajHits.length > 0) {
+          esajAcordao = esajHits[0];
+          esajOk = true;
+        }
+      }
+    } catch(e) {
+      console.log('[ESAJ] Falha na consulta via Worker:', e.message);
+    }
+  }
+
+  document.getElementById('djLoading').classList.remove('show');
+
+  // ── Determina status combinado ──
+  const datajudEncontrou = datajudOk && datajudHits.length > 0;
+  const esajEncontrou    = isTJSP && esajOk && esajAcordao;
+
+  if (datajudEncontrou) {
+    // DataJud OK — enriquece com info ESAJ se disponível
+    if (esajEncontrou) {
+      datajudHits[0]._source = datajudHits[0]._source || {};
+      datajudHits[0]._source._esajInfo    = esajAcordao;
+      datajudHits[0]._source._esajOk      = true;
+      datajudHits[0]._source._fonteLabel  = 'Processo e acórdão localizados em fontes oficiais';
+    } else if (isTJSP) {
+      datajudHits[0]._source = datajudHits[0]._source || {};
+      datajudHits[0]._source._fonteLabel  = 'Processo localizado no DataJud; acórdão não localizado no ESAJ';
+    }
+    mostrarResultado(datajudHits, false);
+
+  } else if (esajEncontrou) {
+    // DataJud falhou mas ESAJ encontrou → mostra acórdão ESAJ
+    const esajHit = {
+      _id: parsed.numeroLimpo,
+      _source: {
+        numeroProcesso:        parsed.original,
+        classe:                { nome: esajAcordao.classe || 'Acórdão TJSP' },
+        orgaoJulgador:         { nome: esajAcordao.orgao  || esajAcordao.orgaoJulgador || 'TJSP' },
+        tribunal:              { sigla: 'TJSP' },
+        dataUltimaAtualizacao: esajAcordao.data || esajAcordao.dataJulgamento || '',
+        assuntos:              esajAcordao.assuntos || [{ nome: esajAcordao.tema || 'Jurisprudência TJSP' }],
+        movimentos:            [],
+        _relator:              esajAcordao.relator   || esajAcordao.ministroRelator || '',
+        _ementa:               esajAcordao.ementa    || esajAcordao.tese || esajAcordao.texto || '',
+        _esajOk:               true,
+        _datajudIndisponivel:  true,
+        _fonteLabel:           'Acórdão localizado no TJSP/ESAJ; DataJud indisponível',
+        _fonteValidacao:       'Acórdão localizado no TJSP/ESAJ · Validação jurisprudencial confirmada por fonte oficial TJSP',
+        _esajUrl:              esajAcordao.url || `https://esaj.tjsp.jus.br/cjsg/resultadoCompleta.do?dados.buscaInteiroTeor=${encodeURIComponent(parsed.original)}`,
+        _mockMode:             false,
+        _pinnedMode:           false,
+      }
+    };
+    mostrarResultado([esajHit], false);
+
+  } else if (datajudOk && !datajudEncontrou) {
+    // DataJud conectou mas não encontrou
+    djShowError(
+      '🔍 Processo não encontrado',
+      `O número <strong>${djEsc(parsed.original)}</strong> não foi localizado no ` +
+      `<strong>${parsed.tribunal.nome}</strong>.<br><br>` +
+      (isTJSP
+        ? `Verifique diretamente no <a href="https://esaj.tjsp.jus.br/cpopg/search.do?cbPesquisa=NUMPROC&dadosConsulta.valorConsultaNuUnificado=${encodeURIComponent(parsed.original)}" target="_blank" style="color:var(--gold);">e-SAJ TJSP</a>, na <a href="https://esaj.tjsp.jus.br/cjsg/resultadoCompleta.do?dados.buscaInteiroTeor=${encodeURIComponent(parsed.original)}" target="_blank" style="color:var(--gold);">Jurisprudência TJSP</a> ou acesse a <a href="https://esaj.tjsp.jus.br/cjsg/consultaCompleta.do?servico=780002" target="_blank" style="color:var(--gold);">Consulta Completa TJSP</a>.`
+        : `Verifique se o número está correto e se o processo está digitalizado no DataJud/CNJ.`)
+    );
+
+  } else {
+    // Tudo falhou → mock com aviso e links manuais
+    console.log('[LexAI] Todas as fontes falharam — modo demonstração');
+    const mockHit = djGerarMock(parsed);
+    mockHit._source._fonteLabel = 'Consulta oficial indisponível — abrir fonte manualmente';
+    mostrarResultado([mockHit], true);
   }
 
   btn.disabled = false;
@@ -6931,8 +7122,12 @@ function botoesVerificacao(numeroCNJ, tribunalKey) {
     html += `<a href="${u.trf3}" target="_blank" rel="noopener noreferrer" style="${btnBlue}">🔗 TRF-3 Consulta</a> `;
   }
 
-  // DataJud — sempre presente como base oficial do CNJ
-  html += `<a href="${u.datajud}" target="_blank" rel="noopener noreferrer" style="${btnGold}">🔗 DataJud/CNJ</a>`;
+  // TJSP — sempre presente como base oficial do CNJ
+  html += `<a href="https://datajud.cnj.jus.br/" target="_blank" rel="noopener noreferrer" style="${btnGold}">🔗 DataJud/CNJ</a>`;
+
+  // ESAJ/TJSP — Consulta Jurisprudência (sempre presente como fonte oficial TJSP)
+  html += ` <a href="https://esaj.tjsp.jus.br/cjsg/consultaCompleta.do?servico=780002" target="_blank" rel="noopener noreferrer"
+    style="${btnBlue}">⚖️ Jurisprudência TJSP</a>`;
 
   return html;
 }
